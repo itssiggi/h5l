@@ -16,10 +16,6 @@ $capsule->setAsGlobal();
 
 $capsule->bootEloquent();
 
-var_dump($capsule);
-die();
-
-
 
 
 
