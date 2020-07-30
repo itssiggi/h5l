@@ -48,38 +48,44 @@ class EventController extends Controller
         } 
 
         $sessions = $event->sessions;
-        $standings = $event->standings;
 
-        foreach ($sessions as $session) {
-            if ($session->isRace) {
-                $raceResultsTransformer = new Collection($session->results, new ResultTransformer);
-                $race = $this->c->fractal->createData($raceResultsTransformer)->toArray()["data"];
-            } elseif ($session->isQuali) {
-                $qualiResultsTransformer = new Collection($session->results, new ResultTransformer);
-                $quali = $this->c->fractal->createData($qualiResultsTransformer)->toArray()["data"];
+        if ($sessions->count()) {
+            $standings = $event->standings;
+
+            foreach ($sessions as $session) {
+                if ($session->isRace) {
+                    $raceResultsTransformer = new Collection($session->results, new ResultTransformer);
+                    $race = $this->c->fractal->createData($raceResultsTransformer)->toArray()["data"];
+                } elseif ($session->isQuali) {
+                    $qualiResultsTransformer = new Collection($session->results, new ResultTransformer);
+                    $quali = $this->c->fractal->createData($qualiResultsTransformer)->toArray()["data"];
+                }
             }
-        }
 
-        $eventTransformer = new Item($event, new EventTransformer);
-        $standingsTransformer = new Collection($standings, new StandingTransformer);
-        $sessionTransformer = new Collection($sessions, new SessionTransformer);
+            $eventTransformer = new Item($event, new EventTransformer);
+            $standingsTransformer = new Collection($standings, new StandingTransformer);
+            $sessionTransformer = new Collection($sessions, new SessionTransformer);
 
-        if ($qualiResultsTransformer) {
+            if ($qualiResultsTransformer) {
+                
+            }
             
+            
+            $data = [
+                "event" => $this->c->fractal->createData($eventTransformer)->toArray()["data"],
+                "sessions" => $this->c->fractal->createData($sessionTransformer)->toArray()["data"],
+                "results" => [
+                    "quali" => $quali,
+                    "race" => $race
+                ],
+                "standings" => $this->c->fractal->createData($standingsTransformer)->toArray()["data"]
+            ];
+
+            return $this->c->view->render($response, 'events/show_race_quali.twig', $data);
+        } else {
+            return $this->c->view->render($response, 'events/show_no_results.twig', compact("event"));
         }
         
-        
-        $data = [
-            "event" => $this->c->fractal->createData($eventTransformer)->toArray()["data"],
-            "sessions" => $this->c->fractal->createData($sessionTransformer)->toArray()["data"],
-            "results" => [
-                "quali" => $quali,
-                "race" => $race
-            ],
-            "standings" => $this->c->fractal->createData($standingsTransformer)->toArray()["data"]
-        ];
-
-        return $this->c->view->render($response, 'events/show.twig', $data);
     }
 
     public function add($request, $response) {
