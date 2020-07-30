@@ -49,7 +49,37 @@ class EventController extends Controller
 
         $sessions = $event->sessions;
 
-        if ($sessions->count()) {
+        if ($sessions->count() == 3) {
+            $standings = $event->standings;
+            $races = [];
+
+            foreach ($sessions as $session) {
+                if ($session->isRace) {
+                    $raceResultsTransformer = new Collection($session->results, new ResultTransformer);
+                    array_push($races, $this->c->fractal->createData($raceResultsTransformer)->toArray()["data"]);
+                } elseif ($session->isQuali) {
+                    $qualiResultsTransformer = new Collection($session->results, new ResultTransformer);
+                    $quali = $this->c->fractal->createData($qualiResultsTransformer)->toArray()["data"];
+                }
+            }
+
+            $eventTransformer = new Item($event, new EventTransformer);
+            $standingsTransformer = new Collection($standings, new StandingTransformer);
+            $sessionTransformer = new Collection($sessions, new SessionTransformer);
+            
+            
+            $data = [
+                "event" => $this->c->fractal->createData($eventTransformer)->toArray()["data"],
+                "sessions" => $this->c->fractal->createData($sessionTransformer)->toArray()["data"],
+                "results" => [
+                    "quali" => $quali,
+                    "races" => $races
+                ],
+                "standings" => $this->c->fractal->createData($standingsTransformer)->toArray()["data"]
+            ];
+
+            return $this->c->view->render($response, 'events/show_race_race_quali.twig', $data);
+        } elseif ($sessions->count() == 2) {
             $standings = $event->standings;
 
             foreach ($sessions as $session) {
@@ -82,7 +112,8 @@ class EventController extends Controller
             ];
 
             return $this->c->view->render($response, 'events/show_race_quali.twig', $data);
-        } else {
+        }
+         else {
             return $this->c->view->render($response, 'events/show_no_results.twig', compact("event"));
         }
         
