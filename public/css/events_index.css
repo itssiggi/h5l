@@ -1,0 +1,7 @@
+.flag {
+    background: #262B36;
+}
+
+.flag:hover {
+    background: #212129;
+}

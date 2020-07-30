@@ -1,0 +1,63 @@
+{% extends 'app.twig' %}
+{% block head %}
+    <!-- <link href="/public/css/auth.css" rel="stylesheet"> -->
+{% endblock %}
+{% block content %}
+
+<div class="w-full container mx-auto mt-10">
+  <h1 class="text-3xl">{{ event.name }}</h1>
+  <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="{{ path_for('admin.editEventResult', {'event_id': event.id}) }}" method="POST">
+    <div class="w-full flex flex-col">
+        {% for result in results %}
+          <div class="flex flex-wrap w-full row mb-5">
+            <div class="position">
+                {{ result.position }}
+            </div>
+            <div>
+                <select class="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading focus:outline-none focus:shadow-outline" name="{{ result.id }}_driver_id">
+                  {% if result.driver_id != null %}
+                    {% for driver in drivers %}
+                      {% if result.driver_id == driver.id %}
+                        <option selected value="{{ driver.id }}">{{ driver.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                    <option disabled>------ Team -------</option>
+                  {% else %}
+                    <option disabled selected>Fahrer wählen</option>
+                  {% endif %}
+                  {% for driver in drivers %}
+                    {% if driver.team_id == result.team_id %}
+                      <option value="{{ driver.id }}">{{ driver.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                  <option disabled>------ Alle -------</option>
+                  {% for driver in drivers %}
+                    {% if driver.team_id != result.team_id %}
+                      <option value="{{ driver.id }}">{{ driver.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            </div>
+            <div class="team">
+              {% for team in teams %}
+                {% if team.id == result.team_id %}
+                  {{ team.name }}
+                {% endif %}
+              {% endfor %}
+            </div>
+                  </div>
+        {% endfor %}
+    </div>
+
+
+    <div class="mt-10">
+      <button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+        Event speichern
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

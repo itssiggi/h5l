@@ -1,0 +1,98 @@
+{% extends 'app.twig' %}
+{% block head %}
+	<!-- <link href="/public/css/auth.css" rel="stylesheet"> -->
+{% endblock %}
+{% block content %}
+
+	<div class="w-full container mx-auto mt-10">
+		<h1 class="text-3xl">{{ event.name }}</h1>
+		<form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" action="{{ path_for('admin.addEventwithResults') }}" method="POST">
+			<div class="w-full flex flex-row flex-wrap">
+				<select selected="1" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading focus:outline-none focus:shadow-outline" id="event_id" name="event_id">
+					<option value="" selected="">--</option>
+					{% for event in events %}
+						<option value="{{event.id}}">{{event.name}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="flex flex-wrap">
+				<div class="w-full text-xl my-4 font-bold">Ergebnisse Rennen</div>
+				{% for x in 1..16 %}
+					<div class="one-result w-full my-2 flex align-middle">
+						<div class="self-center -mr-32 w-1/6">{{ x }}</div>
+						<select class="mr-10 block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading focus:outline-none focus:shadow-outline" name="rennen_{{ x }}_driverId">
+							<option value="0" selected="">--</option>
+							{% for driver in drivers %}
+								<option value="{{ driver.id }}">{{ driver.name }}</option>
+							{% endfor %}
+						</select>
+						<label class="inline-flex items-center mt-3 self-center mr-10">
+							<input type="checkbox" name="rennen_{{x}}_dnf" unchecked class="form-checkbox h-5 w-5 text-gray-600" id="rennen_{{x}}_dnf"><span class="ml-2 text-gray-700">DNF</span>
+						</label>
+					    <input class="w-5 mr-10" type="number" name="rennen_{{x}}_pitstops" value="0" min="0" step="1" max="60" style="-moz-appearance: textfield" />
+						<div class="mr-10 self-center">
+						    <input class="w-5" type="number" name="rennen_{{x}}_bestLapTimeMin" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-5" type="number" name="rennen_{{x}}_bestLapTimeSec" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-8" type="number" name="rennen_{{x}}_bestLapTimeMilli" value="000" min="0" step="1" max="999" style="-moz-appearance: textfield;" />
+						</div>
+						<input class="mr-10 w-10" type="number" value="0" name="rennen_{{ x }}_penalties" id="{{x}}_penalties" step="1" min="0" max="30">
+						<div class="mr-10 self-center">
+						    <input class="w-5" type="number" name="rennen_{{x}}_raceTimeMin" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-5" type="number" name="rennen_{{x}}_raceTimeSec" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-8" type="number" name="rennen_{{x}}_raceTimeMilli" value="000" min="0" step="1" max="999" style="-moz-appearance: textfield;" />
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="flex flex-wrap">
+				<div class="w-full text-xl my-4 font-bold">Ergebnisse Quali</div>
+				{% for x in 1..16 %}
+					<div class="one-result w-full my-2 flex align-middle">
+						<div class="self-center -mr-32 w-1/6">{{ x }}</div>
+						<select class="mr-10 block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading focus:outline-none focus:shadow-outline" name="quali_{{ x }}_driverId">
+							<option value="0" selected="">--</option>
+							{% for driver in drivers %}	
+								<option value="{{ driver.id }}">{{ driver.name }}</option>
+							{% endfor %}
+						</select>
+						<label class="inline-flex items-center mt-3 self-center mr-10">
+							<input name="quali_{{ x }}_dnf" type="checkbox" unchecked name="quali_{{x}}_dnf" class="form-checkbox h-5 w-5 text-gray-600" id="quali_{{x}}_dnf"><span class="ml-2 text-gray-700">DNF</span>
+						</label>
+						<div class="mr-10 self-center">
+						    <input class="w-5" type="number" name="quali_{{x}}_bestLapTimeMin" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-5" type="number" name="quali_{{x}}_bestLapTimeSec" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-8" type="number" name="quali_{{x}}_bestLapTimeMilli" value="000" min="0" step="1" max="999" style="-moz-appearance: textfield;" />
+						</div>
+						<input class="mr-10 w-10" type="number" value="0" name="quali_{{x}}_penalties" id="{{x}}_penalties" step="1" min="0" max="30">
+						<div class="mr-10 self-center">
+						    <input class="w-5" type="number" name="quali_{{x}}_raceTimeMin" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-5" type="number" name="quali_{{x}}_raceTimeSec" value="00" min="0" step="1" max="60" style="-moz-appearance: textfield;" />
+						    :
+						    <input class="w-8" type="number" name="quali_{{x}}_raceTimeMilli" value="000" min="0" step="1" max="999" style="-moz-appearance: textfield;" />
+						</div>
+						<select class="mr-10 block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading focus:outline-none focus:shadow-outline" name="quali_{{ x }}_fastestLapTyre">
+							<option selected="">--</option>
+								<option value="0">Soft</option>
+								<option value="1">Medium</option>
+								<option value="2">Hard</option>
+								<option value="7">Inter</option>
+								<option value="8">Wet</option>
+						</select>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="mt-10">
+				<button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+					Event speichern
+				</button>
+			</div>
+		</form>
+	</div>
+{% endblock %}

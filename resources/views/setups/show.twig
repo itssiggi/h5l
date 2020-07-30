@@ -1,0 +1,35 @@
+{% extends 'app.twig' %}
+
+{% block content %}
+    <div class="container mx-auto flex flex-wrap justify-around">
+        {% for key, category in data %}
+        <div class="w-2/3 mx-auto flex flex-col mt-5 mx-5 ">
+            <div class="px-10 py-5 bg-blue-500 rounded-tl-lg rounded-tr-lg flex flex-col text-center">
+                <img src="/public/img/car/car_{{ key }}.png" />
+                <div class="mt-5 uppercase tracking-widest text-gray-200"> <b>{{ category.name }}</b> </div>
+            </div>
+            <div class="content bg-gray-100 rounded-br-lg rounded-bl-lg">
+                {% for key, part in category | slice(1, length) %}
+                <div class="relative pt-1 mx-20 mt-5 ">
+                  <div class="flex mb-2 items-center justify-between">
+                    <div>
+                      <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-red-600 bg-red-200">
+                        {{ key }}
+                      </span>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-xs font-semibold inline-block text-red-600">
+                        {{ part.max }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="overflow-hidden h-3 mb-4 text-xs flex rounded bg-red-200">
+                    <div style="width:{{ (part.value - part.minVal) * 100 / (part.maxVal - part.minVal) }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500"></div>
+                  </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

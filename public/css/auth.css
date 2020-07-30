@@ -1,0 +1,11 @@
+.content {
+    background: #262B36;
+}
+
+button {
+    background: #262B36;
+}
+
+button:hover {
+    background: #475066
+}

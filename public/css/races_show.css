@@ -1,0 +1,65 @@
+.container {
+    position: relative;
+    font-family: "Montserrat";
+    box-sizing: border-box;
+}
+.driverHeader {
+    position: relative;
+    overflow: hidden;
+    background: #212129;
+    background: #262B36;
+    padding: 70px 80px;
+    z-index: 10;
+    background-repeat: no-repeat;
+}
+
+.driverHeader::after {
+    content: "";
+    position: absolute;
+    transform: rotate(10deg);
+    width: 100%;
+    height: 175%;
+    top: 0;
+    right: 0;
+    z-index: -1;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: var(--bg-image);
+    background-position: 700px -15px;  
+    opacity: 0.075;
+}
+
+
+.factTitle {
+    color: #7F7F84;
+}
+.team_logo {
+    content: "";
+    width: 400px;
+    height: 170px;
+    background-repeat: no-repeat;
+}
+
+.factContent {
+    color: #BFC1C5;
+}
+#rectangle{
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    content: "";
+    transform: translate(300px, -175px) rotate(-40deg);
+    width:800px;
+    height:450px;
+}
+th {
+    color: #BFC1C5;
+}
+h2 {
+    color: #262B36;
+    border-color: #262B36;
+}
+.race_results {
+
+}
+

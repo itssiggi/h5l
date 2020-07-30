@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" />
+        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+        <link href="/public/css/global.css" rel="stylesheet">
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <div class="nav w-full text-gray-200 shadow-lg sm:mb-10 border-b-4 border-blue-400">
+            <div class="shadow-none container flex flex-wrap mx-auto uppercase justify-center " style="box-shadow:none">
+                <div class="w-full sm:w-1/4 text-center py-5 sm:pr-10 hover:text-blue-400 text-lg">
+                    <a href="{{ path_for('events.index') }}">
+                        Events
+                    </a>
+                </div>
+                <div class="w-full sm:w-1/4 text-center py-5 sm:px-10 hover:text-blue-400 text-lg">
+                    Tabelle
+                </div>
+                <div class="w-full hidden sm:w-1/4 text-center py-5 sm:px-10 hover:text-blue-400 text-lg">
+                    Fahrer
+                </div>
+                <div class="w-full hidden sm:w-1/4 text-center py-5 sm:px-10 hover:text-blue-400 text-lg">
+                    Trivia
+                </div>
+            </div>
+
+        </div>
+        {% block content %}{% endblock %}
+    </body>
+    {% block script %}{% endblock %}
+</html>
