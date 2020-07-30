@@ -22,10 +22,10 @@ $app->group('/events', function () {
 });
 
 $app->group('/drivers', function () {
-    $this->get('', EventController::class . ':index')->setName('drivers.index');
-    $this->get('/{name}', EventController::class . ':index')->setName('drivers.show');
-    #$this->get('', DriverController::class . ':index')->setName('drivers.index');
-    #$this->get('/{name}', DriverController::class . ':show')->setName('drivers.show');
+    #$this->get('', EventController::class . ':index')->setName('drivers.index');
+    #$this->get('/{name}', EventController::class . ':index')->setName('drivers.show');
+    $this->get('', DriverController::class . ':index')->setName('drivers.index');
+    $this->get('/{name}', DriverController::class . ':show')->setName('drivers.show');
 });
 
 $app->group('/admin', function () {
