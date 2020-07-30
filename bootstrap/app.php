@@ -22,7 +22,7 @@ $app = new Slim\App([
         'displayErrorDetails' => false,
 
         'app' => [
-            'name' => getenv('Heroes 5 League')
+            'name' => getenv('APP_NAME')
         ],
 
         'views' => [
