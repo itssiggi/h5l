@@ -1,6 +1,6 @@
 {% extends 'app.twig' %}
 {% block head %}
-    <link href="/public/css/drivers_show.css" rel="stylesheet">
+    <link href="{{ asset('drivers_show.css', 'css') }}" rel="stylesheet">
 {% endblock %}
 {% block content %}
 <div>
@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-                <p class="text-2xl text-center md:text-left uppercase shadow-3xl py-5 text-gray-500 lg:hidden" style="color: {{ team.color }}"># {{ driver.carNumber }}</p>
+                <p class="text-2xl text-center md:text-left uppercase shadow-3xl py-5 text-gray-500 lg:hidden" style="-webkit-text-stroke-color: {{ team.color }}"># {{ driver.carNumber }}</p>
                 <hr class="mt-8 md:hidden border-2" :style="{ borderColor: driver.results.data[0].driver.team.color }">
                 <div class="bottomLine mt-16 md:mt-20 w-full md:w-3/5 flex justify-between sm:px-12 md:p-0">
                     <div class="fact flex flex-col items-center">

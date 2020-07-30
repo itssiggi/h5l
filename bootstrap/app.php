@@ -19,7 +19,7 @@ require_once __DIR__ . '/database.php';
 
 $app = new Slim\App([
     'settings' => [
-        'displayErrorDetails' => false,
+        'displayErrorDetails' => true,
 
         'app' => [
             'name' => getenv('APP_NAME')
@@ -61,6 +61,12 @@ $container['view'] = function ($container) {
     $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
     $view->addExtension(new \Twig\Extension\DebugExtension());
+
+    $assetManager = new LoveCoding\TwigAsset\TwigAssetManagement();
+    $assetManager->addPath('css', '/css');
+    $assetManager->addPath('img', '/img');
+    $assetManager->addPath('js', '/js');
+    $view->addExtension($assetManager->getAssetExtension());
 
     return $view;
 };

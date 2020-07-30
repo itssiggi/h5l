@@ -1,6 +1,6 @@
 {% extends 'app.twig' %}
 {% block head %}
-   <link href="/public/css/events_index.css" rel="stylesheet">
+   <link href="{{ asset('events_index.css', 'css') }}" rel="stylesheet">
 {% endblock %} 
 {% block content %}
     <div class="container mx-auto mt-20">
@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="hidden lg:flex mr-10">
-                            <img class="w-20 self-center opacity-50" src="/public/img/flags/{{ event.track.country }}.svg" alt="">
+                            <img class="w-20 self-center opacity-50" src="{{ asset('flags/' ~ event.track.country ~ '.svg', 'img') }}" alt="">
                         </div>
                      
                 </div>
