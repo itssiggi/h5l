@@ -24,6 +24,7 @@ class ResultTransformer extends TransformerAbstract
             'driver' => $result->driver,
             'team' => $result->team,
             'position' => $result->position,
+            'event' => $result->session->event,
             'grid' => $result->grid,
             'result_status' => $result->result_status,
             'positions_gained' => $result->grid - $result->position,
@@ -35,6 +36,7 @@ class ResultTransformer extends TransformerAbstract
             'points' => $result->points,
             'youtube' => $result->youtube,
             'sessionLaps' => $result->sessionLaps,
+            'isRace' => $result->session->isRace,
             'gapToWinner' => [
                 "value" => $result->gap,
                 "string" => $this->formatTimeString($result->gap)
@@ -45,10 +47,6 @@ class ResultTransformer extends TransformerAbstract
             ],
             'fastest_lap_tyre' => $result->fastest_lap_tyre
         ];
-    }
-
-    public function getPointsForResult($result) {
-        return Transaction::where('result_id', $result->id)->first()->points_added;
     }
 
     public function formatTimeString($value) {

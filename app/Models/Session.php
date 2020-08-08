@@ -70,6 +70,13 @@ class Session extends Model
         return $this->type == 10 or $this->type == 11;
     }
 
+    public function getIsMainRaceAttribute() {
+        return $this->isRace && $this->main_race;
+    }
+
+    public function getIsSprintRaceAttribute() {
+        return $this->isRace && $this->sprint_race;
+    }
     public function getIsQualiAttribute() {
         return $this->type == 8 or $this->type == 9;
     }

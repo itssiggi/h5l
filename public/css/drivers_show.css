@@ -39,8 +39,8 @@
 .carNumber {
     font-size: 9rem;
     color: white;
-    -webkit-text-fill-color: rgba(99, 179, 237, 0.1);;
-    -webkit-text-stroke-width: 3px;
+    -webkit-text-fill-color: rgba(255, 255, 255, .9);
+    -webkit-text-stroke-width: 4px;
 }
 
 th {

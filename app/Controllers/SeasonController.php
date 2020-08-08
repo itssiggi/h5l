@@ -44,14 +44,18 @@ class SeasonController extends Controller
     public function currentStandings($request, $response, $args)
     {
         $currentSeason = Season::orderBy('id', 'DESC')->first();
-        $event = Event::orderBy('planned_start', 'DESC')->where('planned_start', '<', new DateTime(date()))->where('season_id', $currentSeason->id)->first();
-        $standings = Standing::where('event_id', $event->id)->orderBy('points', 'DESC')->get();
-
+        $events = Event::orderBy('planned_start', 'DESC')->where('planned_start', '<', new DateTime(date()))->where('season_id', $currentSeason->id)->where('regular_event', 1)->get();
+        foreach ($events as $event) {
+            $standings = Standing::where('event_id', $event->id)->orderBy('points', 'DESC')->get();
+            if ($standings) {
+                break;
+            }
+        }
+        
         $transformer = new Collection($standings, new StandingTransformer);
-        $data = $this->c->fractal->createData($transformer)->toArray()["data"];
+        $standings = $this->c->fractal->createData($transformer)->toArray()["data"];
 
-
-        return $this->c->view->render($response, 'standings/index.twig', compact("data"));
+        return $this->c->view->render($response, 'standings/index.twig', compact("standings"));
     }
 
     public function getRules($request, $response, $args) {

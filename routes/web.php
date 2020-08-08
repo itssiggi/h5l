@@ -13,7 +13,7 @@ use App\Controllers\ {
 $app->get('', EventController::class . ':index')->setName('index');
 
 
-$app->get('/standings', SeasonController::class . ':currentStandings')->setName('seasons.current.standings');
+$app->get('/standings', SeasonController::class . ':currentStandings')->setName('standings.index');
 $app->get('/rules', SeasonController::class . ':getRules')->setName('rules');
 
 $app->group('/events', function () {

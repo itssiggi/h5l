@@ -49,6 +49,26 @@ class Event extends Model
         return $this->hasMany(Standing::class)->orderBy('points', 'DESC');
     }
 
+    public function getMainRaceAttribue() {
+        $sessions = $this->sessions;
+        foreach ($sessions as $session) {
+            if ($session->isMainRace) {
+                return $session;
+            }
+        }
+        return 0;
+    }
+
+    public function getSprintRaceAttribue() {
+        $sessions = $this->sessions;
+        foreach ($sessions as $session) {
+            if ($session->isSprintRace) {
+                return $session;
+            }
+        }
+        return 0;
+    }
+
     public function getTyresAttribute() {
         $tyres = array(
             $this->track->tyre_soft => 0,
@@ -75,7 +95,7 @@ class Event extends Model
     {
         $sessions = $this->sessions;
         foreach ($sessions as $session) {
-            if ($session->isRace) {
+            if ($session->isMainRace) {
                 return $session->statistics;
             }
         }
