@@ -64,7 +64,7 @@ class Result extends Model
         $points = [
             0 => [0],
             1 => [25,18,15,12,10,8,6,4,2,1],
-            2 => [10,6,4,3,2,1]
+            2 => [10,8,6,5,4,3,2,1]
         ];
 
         $points = $points[$this->session->point_system];
