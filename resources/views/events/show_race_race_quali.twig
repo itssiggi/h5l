@@ -32,13 +32,13 @@
                     <div class="fact flex flex-col items-center mb-10 md:mb-0">
                         <div class="factTitle text-lg">Sieger SR</div>
                         {% for result in results.sprintRace %}
-                            {% if result.grid == 1 %}
+                            {% if result.position == 1 %}
                                 <div class="factContent font-bold text-3xl">{{ result.driver.name }}</div>
                             {% endif %}
                         {% endfor %}
                     </div>
                     <div class="fact flex flex-col items-center mb-10">
-                        <img class="h-16" width="64px" src="{{ asset('weather/' ~ event.weather ~ '.svg', 'img') }}">
+                        <img class="h-16" width="64px" src="{{ asset('weather/' ~ sessions.mainRace.weather ~ '.svg', 'img') }}">
                     </div>
                     <div class="fact flex flex-col items-center md:mb-0">
                         <div class="factTitle text-lg">Lufttemperatur</div>
