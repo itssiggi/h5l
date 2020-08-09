@@ -18,6 +18,7 @@ class EventTransformer extends TransformerAbstract
             'planned_start' => $event->planned_start,
             'regular_event' => $event->regular_event,
             'season' => $event->season,
+            'youtube' => $event->youtube,
             'track' => $event->track,
             'statistics' => $event->statistics,
             'weather' => $event->raceWeather
