@@ -35,7 +35,6 @@ class Laptime extends Model
 
     public function getRealTyreAttribute() {
         $tyres = $this->session->track->tyres;
-        var_dump($tyres);
         return $tyres[$this->tyre];
     }
 
