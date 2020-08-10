@@ -10,7 +10,8 @@ use App\Models\{
     Event,
     Laptime,
     Driver,
-    SafetyCarPhase  
+    SafetyCarPhase,
+    Penalty
 };
 
 /**
@@ -39,6 +40,10 @@ class Session extends Model
 
     public function drivers() {
         return $this->hasMany(Driver::class);
+    }
+
+    public function penalties() {
+        return $this->hasMany(Penalty::class);
     }
 
     public function event() {

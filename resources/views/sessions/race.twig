@@ -290,6 +290,88 @@
           </table>
         </div>
       </div>
+      <div>
+        <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
+          <h2>Strafen</h2>
+        </div>
+        <div class="bg-white my-6 mb-10">
+          <table class="text-center w-full">
+            <thead>
+              <tr>
+                <th class="py-4 px-6 font-bold uppercase text-sm">#</th>
+                <th class="py-4 px-6 font-bold uppercase text-sm">Fahrer</th>
+                <th class="py-4 px-6 font-bold uppercase hidden sm:table-cell text-sm">Strafen</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for result in results %}
+                {% if result.penalties > 0 %}
+                <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
+                  {% if result.result_status == 3 or result.result_status == 2 %}
+                    <td class="py-4 px-6">{{ result.position }}</td>
+                  {% elseif result.result_status == 4 %}
+                    <td class="text-gray-600 py-4 px-6 ">DSQ</td>
+                  {% else %}
+                    <td class="text-gray-600 py-4 px-6 ">DNF</td>
+                  {% endif %}
+                  <td class="flex justify-between my-5 px-6 text-center">
+                    <div class="border-l-4" style="opacity: 0.39; border-color: {{ result.team.color }}"></div>
+                    <div class="text-center w-full">
+                      <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
+                        {{ result.driver.name }}
+                      </a>
+                      {% if result.youtube %}
+                        <a target="_blank" href="{{result.youtube}}">
+                          <i class="ml-4 text-xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
+                        </a> 
+                      {% endif %}
+                    </div> 
+                  </td>
+                  <td class="py-4 px-6 hidden sm:table-cell">{{ result.penalties }} s</td>
+                </tr>
+                    <tr class="resultInfo hidden">
+                      <td colspan="5" class="p-0" >
+                        <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
+                          <div class="flex flex-col items-center">
+                              <div class="pt-4 flex w-full px-10 xl:px-32">
+                                <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Runde</div>
+                                <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Typ</div>
+                                <div class="w-2/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Vergehen</div>
+                                <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Strafe</div>
+                              </div>
+                                {% for penalty in penalties %}
+                                  {% if penalty.driver_id == result.driver.id %}
+                                  <div class="py-4 flex w-full px-10 xl:px-32  border-b">
+                                    <div class="w-1/5 justify-center flex">
+                                      {{ penalty.lap }}
+                                    </div>
+                                    <div class="w-1/5 flex hidden lg:flex justify-center">
+                                      {{ penalty.penaltyString }}
+                                    </div>
+                                    <div class="w-2/5 flex hidden lg:flex justify-center">
+                                      {{ penalty.infringementString }}
+                                    </div>
+                                    <div class="w-1/5 flex hidden lg:flex justify-center">
+                                      {% if penalty.time > 0 %}
+                                        {{ penalty.time }} s
+                                      {% else %}
+                                        -
+                                      {% endif %}
+                                    </div>
+                                  </div>
+                                  {% endif %}
+                                {% endfor %}
+                              
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
         </div>
 
       </div>
