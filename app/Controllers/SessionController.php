@@ -26,11 +26,13 @@ class SessionController extends Controller
             $type = $session->type;
             $results = $session->results;
             $grid = $session->grid;
+            $laptimes = $session->laptimes;
 
             $sessionTransformer = new Item($session, new SessionTransformer);
             $resultTransformer = new Collection($results, new ResultTransformer);
             $session = $this->c->fractal->createData($sessionTransformer)->toArray()["data"];
             $results = $this->c->fractal->createData($resultTransformer)->toArray()["data"];
+
 
             if ($type == 10 or $type == 11) {
                 $template = "race";
@@ -39,7 +41,7 @@ class SessionController extends Controller
             } elseif ($type == 8) {
                 $template = "short_quali";
             }
-            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results", "grid"));
+            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results", "grid", "laptimes"));
         } else {
             return $response->withRedirect($this->c->router->pathFor('events.index'));
         }

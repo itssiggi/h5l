@@ -32,4 +32,20 @@ class Laptime extends Model
     public function session() {
         return $this->belongsTo(Session::class);
     }
+
+    public function getTimeAsStringAttribute() {
+        $mins = abs(intval(floor($this->time / 60 % 60)));
+        $secs = abs(intval(floor($this->time % 60)));
+        $milliSecs = abs((int)((($this->time) - floor($this->time)) * 1000));
+        $string = sprintf('0.%03d', $milliSecs);
+
+        if ($secs and $this->time) {
+            $string = sprintf('%01d.%03d', $secs, $milliSecs);
+        }
+        if ($mins and $this->time) {
+            $string = sprintf('%1d:%02d.%03d', $mins, $secs, $milliSecs);
+        }
+
+        return $string;
+    }
 }
