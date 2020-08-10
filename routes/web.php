@@ -6,6 +6,7 @@ use App\Controllers\ {
     EventController,
     CircuitController,
     TeamController,
+    SessionController,
     AdminController,
     Auth\AuthController
 };
@@ -26,6 +27,10 @@ $app->group('/drivers', function () {
     #$this->get('/{name}', EventController::class . ':index')->setName('drivers.show');
     $this->get('', DriverController::class . ':index')->setName('drivers.index');
     $this->get('/{name}', DriverController::class . ':show')->setName('drivers.show');
+});
+
+$app->group('/sessions', function () {
+    $this->get('/{id}', SessionController::class . ':show')->setName('sessions.show');
 });
 
 $app->group('/admin', function () {
