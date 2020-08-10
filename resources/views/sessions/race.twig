@@ -305,7 +305,13 @@
             </thead>
             <tbody>
               {% for result in results %}
-                {% if result.penalties > 0 %}
+                {% set hasPen = false %}
+                {% for penalty in penalties %}
+                  {% if penalty.driver_id == result.driver.id %}
+                    {% set hasPen = true %}
+                  {% endif %}
+                {% endfor %}
+                {% if hasPen %}
                 <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
                   {% if result.result_status == 3 or result.result_status == 2 %}
                     <td class="py-4 px-6">{{ result.position }}</td>
@@ -341,6 +347,7 @@
                               </div>
                                 {% for penalty in penalties %}
                                   {% if penalty.driver_id == result.driver.id %}
+                                    {% set hasPen = true %}
                                   <div class="py-4 flex w-full px-10 xl:px-32  border-b">
                                     <div class="w-1/5 justify-center flex">
                                       {{ penalty.lap }}
@@ -361,12 +368,15 @@
                                   </div>
                                   {% endif %}
                                 {% endfor %}
+                                {% if not hasPen %}
+                                {% endif %}
+
                               
                           </div>
                         </div>
                       </td>
                     </tr>
-                {% endif %}
+                    {% endif %}
               {% endfor %}
             </tbody>
           </table>
