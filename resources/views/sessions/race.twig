@@ -180,7 +180,7 @@
         <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 lg:mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Startaufstellung</h2>
         <div class="flex flex-row w-full mx-auto flex-wrap">
           <div class="flex flex-col w-full md:w-1/2">
-            {% for result in results %}
+            {% for result in grid %}
               {% if result.grid % 2 == 1 %}
                 <div class="box-border flex flex-row starting-box mt-5 sm:mt-16 shadow-lg rounded-lg w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
                   <div class="w-1/6 py-3 text-center font-bold bg-gray-200 text-gray-600 rounded-tl-lg flex h-full"><span class="m-auto">{{ result.grid }}</span ></div>
@@ -197,10 +197,10 @@
               {% endfor %}
             </div>
             <div class="flex flex-col w-full md:w-1/2 md:mt-10">
-              {% for result in results %}
+              {% for result in grid %}
                 {% if result.grid % 2 == 0 %}
                   <div class="box-border flex flex-row starting-box mt-5 md:mt-16 shadow-lg rounded-lg w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
-                    <div class="w-1/6 py-3 text-center font-bold bg-gray-200 text-gray-600 rounded-tl-lg flex h-full"><span class="m-auto">{{ result.position }}</span ></div>
+                    <div class="w-1/6 py-3 text-center font-bold bg-gray-200 text-gray-600 rounded-tl-lg flex h-full"><span class="m-auto">{{ result.grid }}</span ></div>
                     <div style="opacity: 0.65; border-color: {{ result.team.color }}" class="w-5/6 py-3 flex border-l-4 rounded-tr-lg justify-between relative" >
                       <div class="text-center flex justify-between w-5/6"><span class="ml-5 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ result.team.color }}"></span>
                         <div class="w-full">

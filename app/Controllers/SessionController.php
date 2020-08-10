@@ -25,6 +25,7 @@ class SessionController extends Controller
         if ($session) {
             $type = $session->type;
             $results = $session->results;
+            $grid = $session->grid;
 
             $sessionTransformer = new Item($session, new SessionTransformer);
             $resultTransformer = new Collection($results, new ResultTransformer);
@@ -38,7 +39,7 @@ class SessionController extends Controller
             } elseif ($type == 8) {
                 $template = "short_quali";
             }
-            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results"));
+            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results", "grid"));
         } else {
             return $response->withRedirect($this->c->router->pathFor('events.index'));
         }

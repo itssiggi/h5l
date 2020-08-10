@@ -100,6 +100,11 @@ class Session extends Model
         return [];
     }
 
+    public function getGridAttribute() {
+        $results = Result::where('session_id', $this->id)->orderBy('grid', 'ASC')->get();
+        return $results;
+    }
+
     public function getStatisticsAttribute()
     {
 
