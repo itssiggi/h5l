@@ -42,6 +42,13 @@ $app->group('/admin', function () {
 
     $this->get('/addEventwithResults', AdminController::class . ':getAddEventwithResults')->setName('admin.addEventwithResults');
     $this->post('/addEventwithResults', AdminController::class . ':postAddEventwithResults')->setName('admin.addEventwithResults');
+
+    # Penalties
+    $this->get('/sessions/{session_id}/editPenalties', AdminController::class . ':getEditPenalties')->setName('admin.editPenalties');
+    $this->post('/sessions/{session_id}/editPenalties', AdminController::class . ':postEditPenalties')->setName('admin.editPenalties');
+
+    $this->get('/invalidatePenalty/{id}', AdminController::class . ':invalidatePenalty')->setName('admin.invalidatePenalty');
+    $this->get('/validatePenalty/{id}', AdminController::class . ':validatePenalty')->setName('admin.validatePenalty');
 });
 
 

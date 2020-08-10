@@ -14,12 +14,14 @@ class PenaltyTransformer extends TransformerAbstract
         return [
             'id' => $penalty->id,
             'driver_id' => $penalty->driver_id,
+            'driver' => $penalty->driver,
             'session_id' => $penalty->session_id,
             'lap' => $penalty->lap,
             'penaltyString' => $penalty->penaltyString,
             'infringementString' => $penalty->infringementString,
             'other_driver_id' => $penalty->other_driver_id,
             'time' => $penalty->time,
+            'reverted' => $penalty->reverted
         ];
     }
 }

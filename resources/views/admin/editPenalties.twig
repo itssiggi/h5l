@@ -1,0 +1,45 @@
+{% extends 'app.twig' %}
+{% block head %}
+    <!-- <link href="{{ asset('auth.css', 'css') }}" rel="stylesheet"> -->
+{% endblock %}
+{% block content %}
+
+<div class="w-full container mx-auto mt-10">
+  <h1 class="text-3xl"></h1>
+  <table class="table-auto">
+    <thead>
+      <tr>
+        <th class="px-4 py-2">Fahrer</th>
+        <th class="px-4 py-2">Typ</th>
+        <th class="px-4 py-2">Vergehen</th>
+        <th class="px-4 py-2">Strafe</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for penalty in penalties %}
+        <tr class="text-center">
+          <td class="border px-4 py-2">{{ penalty.driver.name }}</td>
+          <td class="border px-4 py-2">{{ penalty.penaltyString }}</td>
+          <td class="border px-4 py-2">{{ penalty.infringementString }}</td>
+          <td class="border px-4 py-2">{{ penalty.time }}</td>
+          <td class="border px-4 py-2">
+            {% if penalty.reverted %}
+              <a href="{{ path_for('admin.validatePenalty', { id: penalty.id }) }}">
+                <button class="text-center w-full bg-green-300 hover:bg-green-400 text-gray-800 font-bold py-2 px-4 rounded">
+                  <span><b>GÜLTIG</b> erklären</span>
+                </button>
+              </a>
+            {% else %}
+              <a href="{{ path_for('admin.invalidatePenalty', { id: penalty.id }) }}">
+                <button class="w-full bg-red-300 hover:bg-red-400 text-gray-800 font-bold py-2 px-4 rounded">
+                  <span><b>NICHTIG</b> erklären</span>
+                </button>
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

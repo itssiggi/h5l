@@ -11,7 +11,13 @@ use App\Models\{
     Result,
     Driver,
     Team,
-    Track
+    Track,
+    Penalty
+};
+
+use App\Transformers\{
+    SessionTransformer,
+    PenaltyTransformer
 };
 use App\Controllers\Controller;
 use League\Fractal\{
@@ -28,6 +34,44 @@ class AdminController extends Controller
         $tracks = Track::all();
 
         return $this->c->view->render($response, 'admin/addEvent.twig', compact("tracks"));
+    }
+
+    public function getEditPenalties($request, $response, $args) {
+        $session = Session::find($args["session_id"]);
+        $penalties = Penalty::where('session_id', $session->id)->orderBy('driver_id', 'ASC')->get();
+
+        $sessionTransformer = new Item($session, new SessionTransformer);
+        $session = $this->c->fractal->createData($sessionTransformer)->toArray()["data"];
+        $penaltyTransformer = new Collection($penalties, new PenaltyTransformer);
+        $penalties = $this->c->fractal->createData($penaltyTransformer)->toArray()["data"];
+
+        return $this->c->view->render($response, 'admin/editPenalties.twig', compact("penalties", "session"));
+    }
+
+    public function postEditPenalties($request, $response, $args) {
+
+    }
+
+    public function validatePenalty($request, $response, $args) {
+        $penalty = Penalty::find($args["id"]);
+        $penalty->reverted = 0;
+        $penalty->save();
+        $result = Result::where("session_id", $penalty->session_id)->where("driver_id", $penalty->driver_id)->first();
+        $result->race_time = $result->race_time + $penalty->time;
+        $result->save();
+
+        return $response->withRedirect($this->c->router->pathFor('admin.editPenalties', ["session_id" => $penalty->session_id]));
+    }
+
+    public function invalidatePenalty($request, $response, $args) {
+        $penalty = Penalty::find($args["id"]);
+        $penalty->reverted = 1;
+        $penalty->save();
+        $result = Result::where("session_id", $penalty->session_id)->where("driver_id", $penalty->driver_id)->first();
+        $result->race_time = $result->race_time - $penalty->time;
+        $result->save();
+
+        return $response->withRedirect($this->c->router->pathFor('admin.editPenalties', ["session_id" => $penalty->session_id]));
     }
 
     public function postAddEvent($request, $response) {
