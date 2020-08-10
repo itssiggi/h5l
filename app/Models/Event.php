@@ -49,7 +49,7 @@ class Event extends Model
         return $this->hasMany(Standing::class)->orderBy('points', 'DESC');
     }
 
-    public function getMainRaceAttribue() {
+    public function getMainRaceAttribute() {
         $sessions = $this->sessions;
         foreach ($sessions as $session) {
             if ($session->isMainRace) {
@@ -59,7 +59,7 @@ class Event extends Model
         return 0;
     }
 
-    public function getSprintRaceAttribue() {
+    public function getSprintRaceAttribute() {
         $sessions = $this->sessions;
         foreach ($sessions as $session) {
             if ($session->isSprintRace) {

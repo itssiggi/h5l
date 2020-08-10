@@ -33,6 +33,12 @@ class Laptime extends Model
         return $this->belongsTo(Session::class);
     }
 
+    public function getRealTyreAttribute() {
+        $tyres = $this->session->track->tyres;
+        var_dump($tyres);
+        return $tyres[$this->tyre];
+    }
+
     public function getTimeAsStringAttribute() {
         $mins = abs(intval(floor($this->time / 60 % 60)));
         $secs = abs(intval(floor($this->time % 60)));

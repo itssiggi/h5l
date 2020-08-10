@@ -7,7 +7,8 @@ use App\Models\{
 };
 use App\Transformers\{
     SessionTransformer,
-    ResultTransformer
+    ResultTransformer,
+    LaptimeTransformer
 };
 use App\Controllers\Controller;
 use League\Fractal\{
@@ -30,8 +31,11 @@ class SessionController extends Controller
 
             $sessionTransformer = new Item($session, new SessionTransformer);
             $resultTransformer = new Collection($results, new ResultTransformer);
+            $laptimeTransformer = new Collection($laptimes, new LaptimeTransformer);
+            
             $session = $this->c->fractal->createData($sessionTransformer)->toArray()["data"];
             $results = $this->c->fractal->createData($resultTransformer)->toArray()["data"];
+            $laptimes = $this->c->fractal->createData($laptimeTransformer)->toArray()["data"];
 
 
             if ($type == 10 or $type == 11) {
