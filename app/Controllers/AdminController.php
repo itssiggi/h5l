@@ -19,7 +19,12 @@ use App\Transformers\{
     SessionTransformer,
     PenaltyTransformer
 };
-use App\Controllers\Controller;
+
+use App\Controllers\{
+    Controller,
+    GlobalController
+};
+
 use App\Controllers\SessionController;
 use League\Fractal\{
     Resource\Item,
@@ -61,7 +66,7 @@ class AdminController extends Controller
         $result->race_time = $result->race_time + $penalty->time;
         $result->save();
 
-        SessionController::recalculatePositions($penalty->session_id);
+        GlobalController::recalculatePositions($penalty->session_id);
 
         return $response->withRedirect($this->c->router->pathFor('admin.editPenalties', ["session_id" => $penalty->session_id]));
     }
@@ -74,7 +79,7 @@ class AdminController extends Controller
         $result->race_time = $result->race_time - $penalty->time;
         $result->save();
 
-        SessionController::recalculatePositions($penalty->session_id);
+        GlobalController::recalculatePositions($penalty->session_id);
 
         return $response->withRedirect($this->c->router->pathFor('admin.editPenalties', ["session_id" => $penalty->session_id]));
     }
