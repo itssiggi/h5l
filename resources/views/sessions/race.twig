@@ -348,7 +348,7 @@
                                 {% for penalty in penalties %}
                                   {% if penalty.driver_id == result.driver.id %}
                                     {% set hasPen = true %}
-                                  <div class="py-4 flex w-full px-10 xl:px-32  border-b">
+                                  <div class="py-4 flex w-full px-10 xl:px-32 border-b {% if penalty.reverted %} text-red-300 line-through {% endif %}">
                                     <div class="w-1/5 justify-center flex">
                                       {{ penalty.lap }}
                                     </div>
