@@ -3,7 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\{
-    Session
+    Session,
+    Result
 };
 use App\Transformers\{
     SessionTransformer,
@@ -55,4 +56,29 @@ class SessionController extends Controller
         }
     }
 
+    public static function recalculatePositions($session_id) {
+        $results = Result::where("session_id", $session_id)->where('result_status', '<', 4)->orderBy('laps', 'DESC')->orderBy('race_time', 'ASC')->get();
+        $position = 1;
+
+        foreach ($results as $result) {
+            $result->position = $position;
+            $result->save();
+
+            $position += 1;
+        }
+        $results = Result::where("session_id", $session_id)->where('result_status', '>', 4)->orderBy('laps', 'DESC')->orderBy('race_time', 'DESC')->get();
+        foreach ($results as $result) {
+            $result->position = $position;
+            $result->save();
+
+            $position += 1;
+        }
+        $results = Result::where("session_id", $session_id)->where('result_status', '=', 4)->orderBy('laps', 'DESC')->orderBy('race_time', 'DESC')->get();
+        foreach ($results as $result) {
+            $result->position = $position;
+            $result->save();
+
+            $position += 1;
+        }
+    }
 }
