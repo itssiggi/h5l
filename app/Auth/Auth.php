@@ -6,6 +6,14 @@ use App\Models\User;
 
 class Auth
 {
+    public function user() {
+        return User::find($_SESSION['user']);
+    }
+
+    public function check() {
+        return isset($_SESSION['user']);
+    }
+
     public function attempt($name, $password) 
     {
         $user = User::where('name', $name)->first();
@@ -23,5 +31,9 @@ class Auth
 
         return false;
 
+    }
+
+    public function logout() {
+        unset($_SESSION['user']);
     }
 }

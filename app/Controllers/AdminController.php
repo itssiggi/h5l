@@ -36,6 +36,10 @@ use League\Fractal\{
  */
 class AdminController extends Controller
 {
+    public function getIndex($request, $response) {
+        return $this->c->view->render($response, 'admin/index.twig', compact(""));
+    }
+
     public function getAddEvent($request, $response) {
         $tracks = Track::all();
 

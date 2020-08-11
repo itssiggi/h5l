@@ -5,6 +5,10 @@
 {% block content %}
 <body class="bg-gray-400">
         <!-- Container -->
+        {% if auth.check %}
+            <a href="{{path_for('auth.signout')}}">
+                <button class="bg-red-300">logout</button>
+            </a>
         <div class="container mx-auto">
             <div class="flex justify-center px-6 my-12">
                 <!-- Row -->
@@ -36,5 +40,8 @@
                 </div>
             </div>
         </div>
+        {% else %}
+            <div>yo</div>
+        {% endif %}
     </body>
 {% endblock %}

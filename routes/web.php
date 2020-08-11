@@ -11,6 +11,8 @@ use App\Controllers\ {
     Auth\AuthController
 };
 
+use App\Middleware\AuthMiddleware;
+
 $app->get('', EventController::class . ':index')->setName('index');
 
 
@@ -34,6 +36,8 @@ $app->group('/sessions', function () {
 });
 
 $app->group('/admin', function () {
+    $this->get('', AdminController::class . ':getIndex')->setName('admin.index');
+
     $this->get('/addEvent', AdminController::class . ':getAddEvent')->setName('admin.addEvent');
     $this->post('/addEvent', AdminController::class . ':postAddEvent')->setName('admin.addEvent');
 
@@ -49,40 +53,20 @@ $app->group('/admin', function () {
 
     $this->get('/invalidatePenalty/{id}', AdminController::class . ':invalidatePenalty')->setName('admin.invalidatePenalty');
     $this->get('/validatePenalty/{id}', AdminController::class . ':validatePenalty')->setName('admin.validatePenalty');
-});
+})->add(new AuthMiddleware($container));;
 
-
-/*$app->group('/auth', function () {
-    $this->post('/login', AuthController::class . ':postSignIn')->setName('auth.signin');
-    $this->get('/login', AuthController::class . ':getSignIn')->setName('auth.signin');
-
-    $this->get('/signup', AuthController::class . ':getSignUp')->setName('auth.signup');
-    $this->post('/signup', AuthController::class . ':postSignUp');
-
+$app->group('/auth', function () {
+    $this->get('/logout', AuthController::class . ':getSignOut')->setName('auth.signout');
     $this->get('/me', AuthController::class . ':showMe')->setName('auth.me');
     $this->get('/me/edit', AuthController::class . ':showMeEdit')->setName('auth.me.edit');
     $this->post('/me/edit', AuthController::class . ':postMeEdit');
-});*/
+})->add(new AuthMiddleware($container));
 
-# $app->group('/teams', function () {
-#     $this->get('', TeamController::class . ':index');
-#     $this->get('/{name}', TeamController::class . ':show');
-#     $this->delete('/{name}', TeamController::class . ':destroy');
-# });
+$app->group('/auth', function () {
+    $this->post('/login', AuthController::class . ':postSignIn')->setName('auth.signin');
+    $this->get('/login', AuthController::class . ':getSignIn')->setName('auth.signin');
+    $this->get('/signup', AuthController::class . ':getSignUp')->setName('auth.signup');
+    $this->post('/signup', AuthController::class . ':postSignUp');
+});
 
-
-
-#$app->get('/setups/{id}', EventController::class . ':showSetup')->setName('events.showSetup');
-
-# $app->group('/circuits', function () {
-#     $this->get('', CircuitController::class . ':index');
-#     $this->get('/{id}', CircuitController::class . ':show');
-#     $this->delete('/{id}', CircuitController::class . ':destroy');
-#     $this->post('/add', CircuitController::class . ':add');
-# });
-
-# $app->group('/seasons', function () {
-#     $this->get('/{year}', SeasonController::class . ':show');
-#     $this->get('/{year}/standings', SeasonController::class . ':standings');
-#     $this->get('/{year}/standings/race/{race_id}', SeasonController::class . ':standings');
-# });
+?>

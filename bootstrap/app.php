@@ -3,7 +3,10 @@
 use \Interop\Container\ContainerInterface as ContainerInterface;
 use \App\Middleware\Cors;
 use \App\Middleware\ValidationErrorsMiddleware;
-use \App\Middleware\SessionMiddleware;
+use \App\Middleware\{
+    SessionMiddleware,
+    CsrfViewMiddleware
+};
 use \App\Middleware\OldInputMiddleware;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -52,6 +55,14 @@ $container['db'] = function ($container) use ($capsule) {
     return $capsule;
 };
 
+$container['auth'] = function ($container) {
+    return new \App\Auth\Auth();
+};
+
+$container['flash'] = function ($container) {
+    return new \Slim\Flash\Messages();
+};
+
 $container['view'] = function ($container) {
     $view = new \Slim\Views\Twig(__DIR__ . '/../resources/views', [
         # 'cache' => $container->settings['views']['cache']
@@ -68,6 +79,13 @@ $container['view'] = function ($container) {
     $assetManager->addPath('js', '/js');
     $view->addExtension($assetManager->getAssetExtension());
 
+    $view->getEnvironment()->addGlobal('auth', [
+        'check' => $container->auth->check(),
+        'user' => $container->auth->user()
+    ]);
+
+    $view->getEnvironment()->addGlobal('flash', $container->flash);
+
     return $view;
 };
 
@@ -75,12 +93,15 @@ $container['validator'] = function ($container) {
     return new \App\Validation\Validator();
 };
 
-$container['auth'] = function ($container) {
-    return new \App\Auth\Auth();
+$container['csrf'] = function ($container) {
+    return new \Slim\Csrf\Guard();
 };
 
 $app->add(new ValidationErrorsMiddleware($container));
 $app->add(new OldInputMiddleware($container));
+$app->add(new CsrfViewMiddleware($container));
+
+$app->add($container->csrf);
 
 require_once __DIR__ . '/../routes/web.php';
 

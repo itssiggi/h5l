@@ -14,6 +14,12 @@ use Psr\Http\Message\{
 
 class AuthController extends Controller
 {
+    public function getSignOut($request, $response) {
+        $this->c->auth->logout();
+
+        return $response->withRedirect($this->c->router->pathFor('auth.signin'));
+    }
+
     public function getSignIn($request, $response)
     {
         return $this->c->view->render($response, 'auth/login.twig');
@@ -28,10 +34,11 @@ class AuthController extends Controller
         );
 
         if (!$auth) {
+            $this->c->flash->addMessage('error', 'Login failed');
             return $response->withRedirect($this->c->router->pathFor('auth.signin'));
         }
 
-        return $response->withRedirect($this->c->router->pathFor('auth.me'));
+        return $response->withRedirect($this->c->router->pathFor('admin.index'));
     }
 
     public function showMe($request, $response)
@@ -63,6 +70,7 @@ class AuthController extends Controller
 
     public function getSignUp($request, $response)
     {
+        var_dump($request->getAttribute('csrf_value'));
         return $this->c->view->render($response, 'auth/signUp.twig');
     }
 
@@ -88,13 +96,18 @@ class AuthController extends Controller
         if ($user) {
             $driver = Driver::create([
                 'name' => $request->getParam('name'),
-                'team_id' => Null,
+                'team_id' => 0,
                 'short_name' => $this->slugify($request->getParam('name'))
             ]);
 
             $user->driver_id = $driver->id;
             $user->save();
         }
+
+        if ($driver) {
+            $this->c->auth->attempt($user->name, $request->getParam('password'));
+        }
+
         return $response->withRedirect($this->c->router->pathFor('auth.me'));
     }
 

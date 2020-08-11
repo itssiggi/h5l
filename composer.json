@@ -15,9 +15,10 @@
         "respect/validation": "^2.0",
         "odan/session": "^4.0",
         "bryanjhv/slim-session": "~3.0",
-        "slim/csrf": "^1.0",
+        "slim/csrf": "0.8.0",
         "twig/twig": "^2.9.0",
-        "lovecoding/twig-asset": "^1.1"
+        "lovecoding/twig-asset": "^1.1",
+        "slim/flash": "^0.4.0"
     },
     "autoload": {
         "psr-4": {
