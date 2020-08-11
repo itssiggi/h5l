@@ -306,9 +306,13 @@
             <tbody>
               {% for result in results %}
                 {% set hasPen = false %}
+                {% set reverted = false %}
                 {% for penalty in penalties %}
                   {% if penalty.driver_id == result.driver.id %}
                     {% set hasPen = true %}
+                    {% if penalty.reverted %}
+                      {% set reverted = true %}
+                    {% endif %}
                   {% endif %}
                 {% endfor %}
                 {% if hasPen %}
@@ -333,7 +337,12 @@
                       {% endif %}
                     </div> 
                   </td>
-                  <td class="py-4 px-6 hidden sm:table-cell">{{ result.penalties }} s</td>
+                  <td class="py-4 px-6 hidden sm:table-cell flex">
+                    {{ result.penalties }} s
+                    {% if reverted %}
+                      <i class="hidden md:inline-block ml-4 self-center text-blue-400 fas fa-exclamation-triangle"></i>
+                    {% endif %}
+                  </td>
                 </tr>
                     <tr class="resultInfo hidden">
                       <td colspan="5" class="p-0" >
