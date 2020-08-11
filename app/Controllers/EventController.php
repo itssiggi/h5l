@@ -29,7 +29,7 @@ use App\Transformers\{
 class EventController extends Controller
 {
     public function index($requst, $response) {
-        $events = Event::all()->orderBy("planned_start", "DESC");
+        $events = Event::all()->sortByDesc("planned_start");
 
         $eventsTransformer = new Collection($events, new EventTransformer);
 
