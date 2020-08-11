@@ -67,6 +67,7 @@ class AdminController extends Controller
         $result->save();
 
         GlobalController::recalculatePositions($penalty->session_id);
+        GlobalController::recalculateStandings();
 
         return $response->withRedirect($this->c->router->pathFor('admin.editPenalties', ["session_id" => $penalty->session_id]));
     }
@@ -80,6 +81,7 @@ class AdminController extends Controller
         $result->save();
 
         GlobalController::recalculatePositions($penalty->session_id);
+        GlobalController::recalculateStandings();
 
         return $response->withRedirect($this->c->router->pathFor('admin.editPenalties', ["session_id" => $penalty->session_id]));
     }
