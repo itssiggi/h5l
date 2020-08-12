@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use DateTime;
+
 use App\Models\{
     Event,
     Result,
@@ -29,7 +31,8 @@ use App\Transformers\{
 class EventController extends Controller
 {
     public function index($requst, $response) {
-        $events = Event::all()->sortByDesc("planned_start");
+        $inOneWeek = (new DateTime('NOW'))->modify('+1 week')->format('Y-m-d');
+        $events = Event::where('planned_start', '<', $inOneWeek)->get()->sortByDesc("planned_start");
 
         $eventsTransformer = new Collection($events, new EventTransformer);
 
