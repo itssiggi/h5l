@@ -54,6 +54,10 @@ class Result extends Model
         return $this->session->winner->race_time - $this->race_time;
     }
 
+    public function getRaceTimeWithPenaltiesAttribute() {
+        return $this->race_time + $this->penalties;
+    }
+
     public function getSessionLapsAttribute() {
         return $this->session->laps;
     }

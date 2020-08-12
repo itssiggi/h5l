@@ -37,8 +37,11 @@ use League\Fractal\{
 class GlobalController extends Controller
 {
     public static function recalculatePositions($session_id) {
-        $results = Result::where("session_id", $session_id)->where('result_status', '<', 4)->orderBy('laps', 'DESC')->orderBy('race_time', 'ASC')->get();
+        $results = Result::where("session_id", $session_id)->where('result_status', '=', 3)->orderBy('laps', 'DESC')->orderBy('race_time', 'ASC')->get();
         $position = 1;
+        $results = $results->sortBy(function ($result) {
+                    return $result->raceTimeWithPenalties;
+                })->sortByDesc('laps');
 
         foreach ($results as $result) {
             $result->position = $position;

@@ -67,7 +67,7 @@ class AdminController extends Controller
         $penalty->reverted = 0;
         $penalty->save();
         $result = Result::where("session_id", $penalty->session_id)->where("driver_id", $penalty->driver_id)->first();
-        $result->race_time = $result->race_time + $penalty->time;
+        $result->penalties += $penalty->time;
         $result->save();
 
         GlobalController::recalculatePositions($penalty->session_id);
@@ -81,7 +81,7 @@ class AdminController extends Controller
         $penalty->reverted = 1;
         $penalty->save();
         $result = Result::where("session_id", $penalty->session_id)->where("driver_id", $penalty->driver_id)->first();
-        $result->race_time = $result->race_time - $penalty->time;
+        $result->penalties -= $penalty->time;
         $result->save();
 
         GlobalController::recalculatePositions($penalty->session_id);

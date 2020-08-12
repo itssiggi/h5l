@@ -106,8 +106,10 @@
                                             + {{ result.sessionLaps - result.laps }} R
                                         {% endif %}    
                                     </div>
-                                    {% if result.penalties %}
+                                    {% if result.penalties > 0 %}
                                         <div class="text-red-600 text-xs lowercase w-1/6 self-center">+ {{ result.penalties }}s</div>
+                                    {% elseif result.penalties < 0 %}
+                                        <div class="text-green-600 text-xs lowercase w-1/6 self-center">- {{ result.penalties | abs }}s</div>
                                     {% else %}
                                         <div class="text-red-600 text-xs lowercase w-1/6"></div>
                                     </td>
