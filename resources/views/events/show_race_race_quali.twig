@@ -366,9 +366,13 @@
                                                 {{ result.driver.name }}
                                             </a>
                                         </div> </div>
-                                        <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
-                                        {% if result.fastest_lap_tyre %}
-                                            <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
+                                        {% if result.best_lap_time > 0 %}
+                                            <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
+                                            {% if result.fastest_lap_tyre %}
+                                                <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="w-2/5 text-center text-gray-500">-</div>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -387,9 +391,13 @@
                                                     {{ result.driver.name }}
                                                 </a>
                                             </div> </div>
-                                            <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
-                                            {% if result.fastest_lap_tyre %}
-                                                <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
+                                            {% if result.best_lap_time > 0 %}
+                                                <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
+                                                {% if result.fastest_lap_tyre %}
+                                                    <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
+                                                {% endif %}
+                                            {% else %}
+                                                <div class="w-2/5 text-center text-gray-500">-</div>
                                             {% endif %}
                                         </div>
                                     </div>
