@@ -1,7 +1,11 @@
 {% extends 'app.twig' %}
 {% block head %}
-  <link href="{{ asset('session_race.css', 'css') }}" rel="stylesheet">
-  <title>H5L - {{ event.name }}</title>
+    <link href="{{ asset('session_race.css', 'css') }}" rel="stylesheet">
+    {% if session.mainRace %}
+        <title>H5L - Hauptrennen - {{ session.event.name }}</title>
+    {% elseif session.sprintRace %}
+        <title>H5L - Sprintrennen - {{ session.event.name }}</title>
+    {% endif %}
 {% endblock %} 
 {% block content %}
   <div class="container mx-auto mb-10">
