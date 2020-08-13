@@ -225,6 +225,7 @@
       <div>
         <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
           <h2>Rundenzeiten</h2>
+          <a id="laptimes"></a>
         </div>
         <div class="bg-white my-6 mb-10">
           <table class="text-center w-full">
@@ -237,9 +238,13 @@
             </thead>
             <tbody>
               {% for result in results %}
+                
                 <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
+
                   {% if result.result_status == 3 or result.result_status == 2 %}
-                    <td class="py-4 px-6">{{ result.position }}</td>
+                    <td class="py-4 px-6">
+                        {{ result.position }}
+                    </td>
                   {% elseif result.result_status == 4 %}
                     <td class="text-gray-600 py-4 px-6 ">DSQ</td>
                   {% else %}

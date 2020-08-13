@@ -160,7 +160,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="w-2/6 flex hidden lg:flex justify-center">
-                                                            <div class="text-gray-600 uppercase self-center">{{ stint.averageTime }}</div>
+                                                            <div class="text-gray-600 uppercase self-center"><a href="{{ path_for('sessions.show', { id: sessions.sprintRace.id }) }}#laptimes">{{ stint.averageTime }}</a></div>
                                                         </div>
                                                         <div class="w-2/6 lg:w-1/6 justify-center flex {% if not stint.pitstopTime %} hidden {% endif %} ">
                                                             <div class="text-gray-600 self-center">{{ stint.pitstopTime }} s</div>
@@ -330,7 +330,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="w-2/6 flex hidden lg:flex justify-center">
-                                                            <div class="text-gray-600 uppercase self-center">{{ stint.averageTime }}</div>
+                                                            <div class="text-gray-600 uppercase self-center"><a href="{{ path_for('sessions.show', { id: sessions.sprintRace.id }) }}#laptimes">{{ stint.averageTime }}</a></div>
                                                         </div>
                                                         <div class="w-2/6 lg:w-1/6 justify-center flex {% if not stint.pitstopTime %} hidden {% endif %} ">
                                                             <div class="text-gray-600 self-center">{{ stint.pitstopTime }} s</div>
