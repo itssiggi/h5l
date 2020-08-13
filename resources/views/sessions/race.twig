@@ -1,15 +1,15 @@
 {% extends 'app.twig' %}
 {% block head %}
-    <link href="{{ asset('session_race.css', 'css') }}" rel="stylesheet">
-    {% if session.mainRace %}
-        <title>H5L - Hauptrennen - {{ session.event.name }}</title>
-    {% elseif session.sprintRace %}
-        <title>H5L - Sprintrennen - {{ session.event.name }}</title>
-    {% endif %}
+  <link href="{{ asset('session_race.css', 'css') }}" rel="stylesheet">
+  {% if session.mainRace %}
+    <title>H5L - Hauptrennen - {{ session.event.name }}</title>
+  {% elseif session.sprintRace %}
+    <title>H5L - Sprintrennen - {{ session.event.name }}</title>
+  {% endif %}
 {% endblock %} 
 {% block content %}
   <div class="container mx-auto mb-10">
-    <div class="header w-full rounded-t-lg shadow-2xl bg-contain flex flex-col" :style="cssVars">
+    <div class="header w-full md:rounded-t-lg shadow-2xl bg-contain flex flex-col" :style="cssVars">
       <div class="text-xl text-gray-600 mb-5 hidden md:flex">
         <div class="mr-10">
           {% if session.mainRace %}
@@ -222,61 +222,61 @@
               </div>
             </div>
           </div>
-      <div>
-        <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
-          <h2>Rundenzeiten</h2>
-          <a id="laptimes"></a>
-        </div>
-        <div class="bg-white my-6 mb-10">
-          <table class="text-center w-full">
-            <thead>
-              <tr>
-                <th class="py-4 px-6 font-bold uppercase text-sm">#</th>
-                <th class="py-4 px-6 font-bold uppercase text-sm">Fahrer</th>
-                <th class="py-4 px-6 font-bold uppercase hidden sm:table-cell text-sm">Runden</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for result in results %}
-                
-                <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
+          <div>
+            <div class="hidden md:flex race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
+              <h2>Rundenzeiten</h2>
+              <a id="laptimes"></a>
+            </div>
+            <div class="hidden md:flex bg-white my-6 mb-10">
+              <table class="text-center w-full">
+                <thead>
+                  <tr>
+                    <th class="py-4 px-6 font-bold uppercase text-sm">#</th>
+                    <th class="py-4 px-6 font-bold uppercase text-sm">Fahrer</th>
+                    <th class="py-4 px-6 font-bold uppercase hidden sm:table-cell text-sm">Runden</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for result in results %}
 
-                  {% if result.result_status == 3 or result.result_status == 2 %}
-                    <td class="py-4 px-6">
-                        {{ result.position }}
-                    </td>
-                  {% elseif result.result_status == 4 %}
-                    <td class="text-gray-600 py-4 px-6 ">DSQ</td>
-                  {% else %}
-                    <td class="text-gray-600 py-4 px-6 ">DNF</td>
-                  {% endif %}
-                  <td class="flex justify-between my-5 px-6 text-center">
-                    <div class="border-l-4" style="opacity: 0.39; border-color: {{ result.team.color }}"></div>
-                    <div class="text-center w-full">
-                      <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
-                        {{ result.driver.name }}
-                      </a>
-                      {% if result.youtube %}
-                        <a target="_blank" href="{{result.youtube}}">
-                          <i class="ml-4 text-xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
-                        </a> 
+                    <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
+
+                      {% if result.result_status == 3 or result.result_status == 2 %}
+                        <td class="py-4 px-6">
+                          {{ result.position }}
+                        </td>
+                      {% elseif result.result_status == 4 %}
+                        <td class="text-gray-600 py-4 px-6 ">DSQ</td>
+                      {% else %}
+                        <td class="text-gray-600 py-4 px-6 ">DNF</td>
                       {% endif %}
-                    </div> 
-                  </td>
-                  <td class="py-4 px-6 hidden sm:table-cell">{{ result.laps }}</td>
-                </tr>
+                      <td class="flex justify-between my-5 px-6 text-center">
+                        <div class="border-l-4" style="opacity: 0.39; border-color: {{ result.team.color }}"></div>
+                        <div class="text-center w-full">
+                          <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
+                            {{ result.driver.name }}
+                          </a>
+                          {% if result.youtube %}
+                            <a target="_blank" href="{{result.youtube}}">
+                              <i class="ml-4 text-xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
+                            </a> 
+                          {% endif %}
+                        </div> 
+                      </td>
+                      <td class="py-4 px-6 hidden sm:table-cell">{{ result.laps }}</td>
+                    </tr>
                     <tr class="resultInfo hidden">
                       <td colspan="5" class="p-0" >
                         <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
                           <div class="flex flex-col items-center">
-                              <div class="pt-4 flex w-full px-10 xl:px-32">
-                                <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Reifen</div>
-                                <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Sektor 1</div>
-                                <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Sektor 2</div>
-                                <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Rundenzeit</div>
-                              </div>
-                              {% for laptime in laptimes %}
-                                {% if laptime.driver_id == result.driver.id %}
+                            <div class="pt-4 flex w-full px-10 xl:px-32">
+                              <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Reifen</div>
+                              <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Sektor 1</div>
+                              <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Sektor 2</div>
+                              <div class="w-1/4 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Rundenzeit</div>
+                            </div>
+                            {% for laptime in laptimes %}
+                              {% if laptime.driver_id == result.driver.id %}
                                 <div class="py-4 flex w-full px-10 xl:px-32  border-b">
                                   <div class="w-1/4 flex justify-center">
                                     <img class="w-8" src="{{ asset('tyres/' ~ laptime.tyre ~ '.svg', 'img') }}" >
@@ -291,196 +291,219 @@
                                     {{ laptime.time.string }}
                                   </div>
                                 </div>
-                                {% endif %}
-                              {% endfor %}
+                              {% endif %}
+                            {% endfor %}
                           </div>
                         </div>
                       </td>
                     </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div>
-        <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
-          <h2>Strafen</h2>
-        </div>
-        <div class="bg-white my-6 mb-10">
-          <table class="text-center w-full">
-            <thead>
-              <tr>
-                <th class="py-4 px-6 font-bold uppercase text-sm">#</th>
-                <th class="py-4 px-6 font-bold uppercase text-sm">Fahrer</th>
-                <th class="py-4 px-6 font-bold uppercase hidden sm:table-cell text-sm">Strafen</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for result in results %}
-                {% set hasPen = false %}
-                {% set reverted = false %}
-                {% for penalty in penalties %}
-                  {% if penalty.driver_id == result.driver.id %}
-                    {% set hasPen = true %}
-                    {% if penalty.reverted %}
-                      {% set reverted = true %}
-                    {% endif %}
-                  {% endif %}
-                {% endfor %}
-                {% if hasPen %}
-                <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
-                  {% if result.result_status == 3 or result.result_status == 2 %}
-                    <td class="py-4 px-6">{{ result.position }}</td>
-                  {% elseif result.result_status == 4 %}
-                    <td class="text-gray-600 py-4 px-6 ">DSQ</td>
-                  {% else %}
-                    <td class="text-gray-600 py-4 px-6 ">DNF</td>
-                  {% endif %}
-                  <td class="flex justify-between my-5 px-6 text-center">
-                    <div class="border-l-4" style="opacity: 0.39; border-color: {{ result.team.color }}"></div>
-                    <div class="text-center w-full">
-                      <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
-                        {{ result.driver.name }}
-                      </a>
-                      {% if result.youtube %}
-                        <a target="_blank" href="{{result.youtube}}">
-                          <i class="ml-4 text-xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
-                        </a> 
-                      {% endif %}
-                    </div> 
-                  </td>
-                  <td class="py-4 px-6 hidden sm:table-cell flex">
-                    {{ result.penalties }} s
-                    {% if reverted %}
-                      <i class="hidden md:inline-block ml-4 self-center text-blue-400 fas fa-exclamation-triangle"></i>
-                    {% endif %}
-                  </td>
-                </tr>
-                    <tr class="resultInfo hidden">
-                      <td colspan="5" class="p-0" >
-                        <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
-                          <div class="flex flex-col items-center">
-                              <div class="pt-4 flex w-full px-10 xl:px-32">
-                                <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Runde</div>
-                                <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Typ</div>
-                                <div class="w-2/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Vergehen</div>
-                                <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Strafe</div>
-                              </div>
-                                {% for penalty in penalties %}
-                                  {% if penalty.driver_id == result.driver.id %}
-                                    {% set hasPen = true %}
-                                  <div class="py-4 flex w-full px-10 xl:px-32 border-b {% if penalty.reverted %} text-red-300 line-through {% endif %}">
-                                    <div class="w-1/5 justify-center flex">
-                                      {{ penalty.lap }}
-                                    </div>
-                                    <div class="w-1/5 flex hidden lg:flex justify-center">
-                                      {{ penalty.penaltyString }}
-                                    </div>
-                                    <div class="w-2/5 flex hidden lg:flex justify-center">
-                                      {{ penalty.infringementString }}
-                                    </div>
-                                    <div class="w-1/5 flex hidden lg:flex justify-center">
-                                      {% if penalty.time > 0 %}
-                                        {{ penalty.time }} s
-                                      {% else %}
-                                        -
-                                      {% endif %}
-                                    </div>
-                                  </div>
-                                  {% endif %}
-                                {% endfor %}
-                                {% if not hasPen %}
-                                {% endif %}
-
-                              
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    {% endif %}
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-        <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
-          <h2>Statistik</h2>
-        </div>
-        <div class="bg-white my-6 mb-10 mt-10">
-          <div class="flex">
-            <div class="w-1/2 text-center">
-              <p>{{ session.track.name }}</p>
-              <img class="w-full mt-4" src="{{ asset('tracks/' ~ session.track.id ~ '.png', 'img') }}">
-            </div>
-            <div class="w-1/2 flex flex-col px-10">
-              <div class="flex w-full  justify-between">
-                <div class="row text-center">
-                  <div>{{ session.start | date("H:i") }} Uhr</div>
-                  <div class="uppercase text-gray-500 text-sm">start</div>
-                </div>
-                <div class="text-center self-center flex">
-                  <i class="text-green-500 fas fa-angle-double-left self-center"></i>
-                  <div class="mx-4">{{ session.laps }} Runden</div>
-                  <i class="text-green-500 fas fa-angle-double-right self-center"></i>
-                </div>
-                <div class="row text-center">
-                  <div>{{ session.end | date("H:i") }} Uhr</div>
-                  <div class="uppercase text-gray-500 text-sm">Ende</div>
-                </div>
-              </div>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-      </div>
-        </div>
+          <div>
+            <div class="hidden md:flex race_results  pl-5 text-xl md:text-2xl font-bold border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
+              <h2>Strafen</h2>
+            </div>
+            <div class="hidden md:flex  bg-white my-6 mb-10">
+              <table class="text-center w-full">
+                <thead>
+                  <tr>
+                    <th class="py-4 px-6 font-bold uppercase text-sm">#</th>
+                    <th class="py-4 px-6 font-bold uppercase text-sm">Fahrer</th>
+                    <th class="py-4 px-6 font-bold uppercase hidden sm:table-cell text-sm">Strafen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for result in results %}
+                    {% set hasPen = false %}
+                      {% set reverted = false %}
+                        {% for penalty in penalties %}
+                          {% if penalty.driver_id == result.driver.id %}
+                            {% set hasPen = true %}
+                              {% if penalty.reverted %}
+                                {% set reverted = true %}
+                                {% endif %}
+                              {% endif %}
+                            {% endfor %}
+                            {% if hasPen %}
+                              <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
+                                {% if result.result_status == 3 or result.result_status == 2 %}
+                                  <td class="py-4 px-6">{{ result.position }}</td>
+                                {% elseif result.result_status == 4 %}
+                                  <td class="text-gray-600 py-4 px-6 ">DSQ</td>
+                                {% else %}
+                                  <td class="text-gray-600 py-4 px-6 ">DNF</td>
+                                {% endif %}
+                                <td class="flex justify-between my-5 px-6 text-center">
+                                  <div class="border-l-4" style="opacity: 0.39; border-color: {{ result.team.color }}"></div>
+                                  <div class="text-center w-full">
+                                    <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
+                                      {{ result.driver.name }}
+                                    </a>
+                                    {% if result.youtube %}
+                                      <a target="_blank" href="{{result.youtube}}">
+                                        <i class="ml-4 text-xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
+                                      </a> 
+                                    {% endif %}
+                                  </div> 
+                                </td>
+                                <td class="py-4 px-6 hidden sm:table-cell flex">
+                                  {{ result.penalties }} s
+                                  {% if reverted %}
+                                    <i class="hidden md:inline-block ml-4 self-center text-blue-400 fas fa-exclamation-triangle"></i>
+                                  {% endif %}
+                                </td>
+                              </tr>
+                              <tr class="resultInfo hidden">
+                                <td colspan="5" class="p-0" >
+                                  <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
+                                    <div class="flex flex-col items-center">
+                                      <div class="pt-4 flex w-full px-10 xl:px-32">
+                                        <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Runde</div>
+                                        <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Typ</div>
+                                        <div class="w-2/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Vergehen</div>
+                                        <div class="w-1/5 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Strafe</div>
+                                      </div>
+                                      {% for penalty in penalties %}
+                                        {% if penalty.driver_id == result.driver.id %}
+                                          {% set hasPen = true %}
+                                            <div class="py-4 flex w-full px-10 xl:px-32 border-b {% if penalty.reverted %} text-red-300 line-through {% endif %}">
+                                              <div class="w-1/5 justify-center flex">
+                                                {{ penalty.lap }}
+                                              </div>
+                                              <div class="w-1/5 flex hidden lg:flex justify-center">
+                                                {{ penalty.penaltyString }}
+                                              </div>
+                                              <div class="w-2/5 flex hidden lg:flex justify-center">
+                                                {{ penalty.infringementString }}
+                                              </div>
+                                              <div class="w-1/5 flex hidden lg:flex justify-center">
+                                                {% if penalty.time > 0 %}
+                                                  {{ penalty.time }} s
+                                                {% else %}
+                                                  -
+                                                {% endif %}
+                                              </div>
+                                            </div>
+                                          {% endif %}
+                                        {% endfor %}
+                                        {% if not hasPen %}
+                                        {% endif %}
 
-      </div>
 
-    </div>
-  </div>
-{% endblock %}
-{% block script %}
-  <script>
-  var elements  = document.getElementsByClassName('resultRow');
-  var infoElements  = document.getElementsByClassName('resultInfo');
+                                      </div>
+                                    </div>
+                                  </td>
+                                </tr>
+                              {% endif %}
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="hidden md:flex race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
+                        <h2>Statistik</h2>
+                      </div>
+                      <div class="hidden md:flex bg-white my-6 mb-10 mt-10">
+                        <div class="flex">
+                          <div class="w-1/2 text-center">
+                            <p>{{ session.track.name }}</p>
+                            <img class="w-full mt-4" src="{{ asset('tracks/' ~ session.track.id ~ '.png', 'img') }}">
+                          </div>
+                          <div class="w-1/2 flex flex-col px-10">
+                            <div class="flex w-full  justify-between">
+                              <div class="row text-center">
+                                <div>{{ session.start | date("H:i") }} Uhr</div>
+                                <div class="uppercase text-gray-500 text-sm">start</div>
+                              </div>
+                              <div class="text-center self-center flex">
+                                <i class="text-green-500 fas fa-angle-double-left self-center"></i>
+                                <div class="mx-4">{{ session.laps }} Runden</div>
+                                <i class="text-green-500 fas fa-angle-double-right self-center"></i>
+                              </div>
+                              <div class="row text-center">
+                                <div>{{ session.end | date("H:i") }} Uhr</div>
+                                <div class="uppercase text-gray-500 text-sm">Ende</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
+                        <h2>Wetter</h2>
+                      </div>
+                      <div class="flex justify-around mt-10 w-full flex-wrap">
+                        {% for weather in session.weatherData %}
+                          <div class="w-full md:w-64  flex flex-col justify-center items-center text-center bg-white">
+                            {% if loop.length > 1 %}
+                              <div class="mb-8 text-gray-600">Runde {{ weather.lap }}</div>
+                            {% endif %}
+                            <div class="w-32 h-32 flex items-center justify-center">
+                              <img class="h-32 w-64" width="64px" src="{{ asset('weather/' ~ weather.type ~ '.svg', 'img') }}">
+                            </div>
+                            <div class="text-3xl font-bold text-gray-900 my-6">
+                              {{ weather.air_temp }}º
+                              <span class="font-normal text-gray-700 mx-1">/</span>
+                              {{ weather.track_temp }}º
+                            </div>
+                          </div>
+                          {% if loop.index < loop.length %}
+                            <i class="hidden md:block fas fa-angle-double-right self-center text-2xl text-gray-400"></i>
+                            <i class="md:hidden fas fa-angle-double-down self-center text-2xl text-gray-400 my-5"></i>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                </div>
 
-  Array.from(elements).forEach(function(element) {
-    element.addEventListener('click', function(){
-      func(element)
-    });
-  });
+              </div>
 
-  function func (el) {
-    if (infoElements.length) {
-      if (el.nextElementSibling.classList.contains('md:table-row')) {
-        resetAll(); 
-      } else {
-        resetAll(); 
-        el.classList.add("md:bg-gray-200", "md:border-t", "md:border-l", "md:border-r", "md:font-bold");
-        el.nextElementSibling.classList.remove("hidden");
-        el.nextElementSibling.classList.add("hidden", "md:table-row");
-      }
-    }
-  };
+            </div>
+          </div>
+        {% endblock %}
+        {% block script %}
+          <script>
+          var elements  = document.getElementsByClassName('resultRow');
+          var infoElements  = document.getElementsByClassName('resultInfo');
 
-  function resetAll() {
-    var infos = document.getElementsByClassName("resultInfo");
-    var rows = document.getElementsByClassName("resultRow");
+          Array.from(elements).forEach(function(element) {
+            element.addEventListener('click', function(){
+              func(element)
+            });
+          });
 
-    for (var i = 0; i < infos.length; i++) {
-      infos[i].classList.add("hidden");
-      infos[i].classList.remove("md:table-row");
-    } 
+          function func (el) {
+            if (infoElements.length) {
+              if (el.nextElementSibling.classList.contains('md:table-row')) {
+                resetAll(); 
+              } else {
+                resetAll(); 
+                el.classList.add("md:bg-gray-200", "md:border-t", "md:border-l", "md:border-r", "md:font-bold");
+                el.nextElementSibling.classList.remove("hidden");
+                el.nextElementSibling.classList.add("hidden", "md:table-row");
+              }
+            }
+          };
 
-    for (var i = 0; i < rows.length; i++) {
-      rows[i].classList.remove("md:bg-gray-200", "md:border-t", "md:border-l", "md:border-r", "md:font-bold");
-      rows[i].classList.remove("md:bg-gray-100");
-    } 
-  }
+          function resetAll() {
+            var infos = document.getElementsByClassName("resultInfo");
+            var rows = document.getElementsByClassName("resultRow");
 
-  func(elements[0]);
+            for (var i = 0; i < infos.length; i++) {
+              infos[i].classList.add("hidden");
+              infos[i].classList.remove("md:table-row");
+            } 
+
+            for (var i = 0; i < rows.length; i++) {
+              rows[i].classList.remove("md:bg-gray-200", "md:border-t", "md:border-l", "md:border-r", "md:font-bold");
+              rows[i].classList.remove("md:bg-gray-100");
+            } 
+          }
+
+          func(elements[0]);
 
 
 
-  </script>
+          </script>
 
-  {% endblock %}
+        {% endblock %}

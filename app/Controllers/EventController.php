@@ -10,7 +10,8 @@ use App\Models\{
     Session,
     Setup,
     Standing,
-    SafetyCarPhase
+    SafetyCarPhase,
+    Weather
 };
 
 use App\Controllers\Controller;

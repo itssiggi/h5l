@@ -11,7 +11,8 @@ use App\Models\{
     Laptime,
     Driver,
     SafetyCarPhase,
-    Penalty
+    Penalty,
+    Weather
 };
 
 /**
@@ -60,6 +61,12 @@ class Session extends Model
 
     public function results() {
         return $this->hasMany(Result::class)->orderBy('position', 'ASC');
+    }
+
+    public function getWeatherDataAttribute() {
+        $weather = Weather::where('session_id', $this->id)->get();
+        return $weather;
+        return $this->hasMany(Weather::class);
     }
 
     public function getWinnerAttribute() {
