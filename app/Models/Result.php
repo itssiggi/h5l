@@ -62,6 +62,20 @@ class Result extends Model
         return $this->session->laps;
     }
 
+    public function getEventPointsAttribute() {
+        $eventPoints = null;
+        $sessions = Session::where('event_id', $this->session->event->id)->get();
+        if ($sessions) {
+            foreach ($sessions as $session) {
+                $result = Result::where('driver_id', $this->driver_id)->where('session_id', $session->id)->first();
+                if ($result) {
+                    $eventPoints = intval($eventPoints) + $result->points;
+                }
+            }
+        }
+        return $eventPoints;
+    }
+
     public function getPointsAttribute() {
         $fastest_lap = $this->fastest_lap;
 

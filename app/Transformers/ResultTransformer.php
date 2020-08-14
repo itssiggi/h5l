@@ -35,6 +35,7 @@ class ResultTransformer extends TransformerAbstract
             'best_lap_time' => $best_lap_time,
             'points' => $result->points,
             'youtube' => $result->youtube,
+            'eventPoints' => $result->eventPoints,
             'sessionLaps' => $result->sessionLaps,
             'isRace' => $result->session->isRace,
             'gapToWinner' => [
