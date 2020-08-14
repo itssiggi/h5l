@@ -17,7 +17,8 @@ use DateTime;
 use App\Transformers\{
     RaceTransformer,
     StandingTransformer,
-    DriverTransformer
+    DriverTransformer,
+    TeamTransformer
 };
 
 
@@ -27,7 +28,8 @@ use App\Models\ {
     Event,
     Driver,
     Session,
-    Standing
+    Standing,
+    Team
 };
 
 class SeasonController extends Controller
@@ -51,11 +53,18 @@ class SeasonController extends Controller
                 break;
             }
         }
-        
+
+        $teams = Team::limit(10)->get();
+        $teams = $teams->sortByDesc(function ($team) {
+            return $team->points;
+        });
+        $teamTransformer = new Collection($teams, new TeamTransformer);
+        $teams = $this->c->fractal->createData($teamTransformer)->toArray()["data"];
+
         $transformer = new Collection($standings, new StandingTransformer);
         $standings = $this->c->fractal->createData($transformer)->toArray()["data"];
 
-        return $this->c->view->render($response, 'standings/index.twig', compact("standings"));
+        return $this->c->view->render($response, 'standings/index.twig', compact("standings", "teams"));
     }
 
     public function getRules($request, $response, $args) {

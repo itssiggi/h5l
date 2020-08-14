@@ -17,6 +17,7 @@
         <div class="grid mb-10">
             <div class="flex flex-row w-full mx-auto flex-wrap">
                 <div class="standings mb-10 w-full">
+                     <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Fahrer</h2>
                     <div class="container md:container-sm mx-auto">
                         {% for standing in standings %}
                             <div class="box-border flex flex-row starting-box mt-5 w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
@@ -37,7 +38,24 @@
                             </div>
                         {% endfor %}
                     </div>
-
+                    <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-10 mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Teams</h2>
+                    <div class="container md:container-sm mx-auto">
+                        {% for team in teams %}
+                            <div class="box-border flex flex-row starting-box mt-5 w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
+                                <div class="w-1/6 py-3 text-center border-2 font-bold bg-gray-300 text-gray-600 rounded-tl-lg rounded-bl-lg flex h-full"><span class="m-auto"> {{ loop.index }}</span ></div>
+                                <div class="w-5/6 py-3 flex border-gray-300 border-2 rounded-tr-lg rounded-br-lg justify-between">
+                                    <div class="text-center flex justify-between w-3/5"><span class=" hidden md:block ml-10 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ team.color }}"></span><div class="w-full">
+                                        {{ team.name }}
+                                    </div></div>
+                                    {% if standing.points == 1 %}
+                                        <div class=" w-2/5 text-center text-gray-600">{{ team.points }} Punkt</div>
+                                    {% else %}
+                                        <div class=" w-2/5 text-center text-gray-600">{{ team.points }} Punkte</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
