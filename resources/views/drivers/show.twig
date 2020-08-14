@@ -61,8 +61,9 @@
                     </tr>
                   </thead>
                   <tbody>
+                    {% set lastResult = -99 %}
                     {% for result in results %}
-                        {% if result.isRace and result.event.regular_event %}
+                        {% if result.isRace and result.event.regular_event and result.event.id != lastResult %}
                         <tr class="hover:bg-gray-100 w-full">
                             <td class="py-4 px-6"><a href="{{ path_for('events.show', {id: result.event.id}) }}"> {{ result.event.name }}</a></td>
                             <td class="py-4 px-6 hidden sm:table-cell">{{ result.event.planned_start | date("d.m.Y") }}</td>
@@ -88,9 +89,10 @@
                             {% elseif result.result_status == 6 %}
                             <td class="text-gray-600 py-4 px-6 ">DNF</td>
                             {% elseif result.result_status == 3 %}
-                            <td class="py-4 px-6 hidden sm:table-cell">{{ result.points }}</td>
+                            <td class="py-4 px-6 hidden sm:table-cell">{{ result.eventPoints }}</td>
                             {% endif %}
                         </tr>
+                        {% set lastResult = result.event.id %}
                         {% endif %}
                     {% endfor %}
                   </tbody>

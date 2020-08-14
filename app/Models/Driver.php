@@ -33,8 +33,9 @@ class Driver extends Model
     }
 
     public function results() {
-        return $this->hasMany(Result::class);
+        return $this->hasMany(Result::class)->orderBy('session_id', 'DESC');
     }
+
 
     public function getPositionAttribute() {
         $season = Season::latest()->first();
