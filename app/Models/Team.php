@@ -22,4 +22,17 @@ class Team extends Model
         return $this->hasMany(Driver::class);
     }
 
+    public function getPointsAttribute() {
+        $totalPoints = 0;
+        foreach ($this->drivers as $driver) {
+            $results = $driver->results;
+            if ($results) {
+                foreach ($results as $result) {
+                    $totalPoints += $result->points;
+                }
+            }
+        }
+        return $totalPoints;
+    }
+
 }

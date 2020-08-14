@@ -15,7 +15,8 @@ class TeamTransformer extends TransformerAbstract
             'id' => $team->id,
             'name' => $team->name,
             'color' => $team->color,
-            'drivers' => $team->drivers
+            'drivers' => $team->drivers,
+            'points' => $team->points
         ];
     }
 }
