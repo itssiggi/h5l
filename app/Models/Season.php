@@ -23,8 +23,8 @@ class Season extends Model
         return $this->hasMany(Event::class);
     }
 
-    public function drivers() {
-        return $this->hasMany(Driver::class);
+    public function scopeCurrent() {
+        return $query->orderBy('id', 'DESC');
     }
 
     public function bestQualifier(Season $season) {

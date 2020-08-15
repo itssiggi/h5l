@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DateTime;
+
 use App\Models\{
     Session,
     Result,
@@ -47,6 +49,31 @@ class Event extends Model
 
     public function standings() {
         return $this->hasMany(Standing::class)->orderBy('points', 'DESC');
+    }
+
+    public function scopeOfficial($query) {
+        return $query->where('regular_event', 1);
+    }
+
+    public function scopeSeason($query, $season_id) {
+        return $query->where('season_id', $season_id);
+    }
+
+    public function scopePast($query) {
+        return $query->where('planned_start', '<',  new DateTime());
+    }
+
+    public function scopeFuture($query) {
+        return $query->where('planned_start', '>',  new DateTime());
+    }
+
+    public function scopePastInOneWeek($query) {
+        return $query->where('planned_start', '<',  (new DateTime())->modify("+1 week"));
+    }
+
+    public function scopeCurrentSeason($query) {
+        $season = Season::orderBy('id', 'DESC')->first();
+        return $query->where('season_id', $season->id);
     }
 
     public function getMainRaceAttribute() {

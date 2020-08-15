@@ -6,7 +6,8 @@ use App\Models\{
     Driver,
     Result,
     Session,
-    Standing
+    Standing,
+    Event
 };
 use App\Controllers\Controller;
 use League\Fractal\{

@@ -26,4 +26,8 @@ class Weather extends Model
     public function session() {
         return $this->belongsTo(Session::class);
     }
+
+    public function scopeSession($query, $session_id) {
+        return $query->where('session_id', $session_id);
+    }
 }

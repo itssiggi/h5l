@@ -63,10 +63,21 @@ class Session extends Model
         return $this->hasMany(Result::class)->orderBy('position', 'ASC');
     }
 
+    public function scopeRace($query) {
+        return $query->where('type', 10)->orWhere('type', 11);
+    }
+
+    public function scopeQuali($query) {
+        return $query->where('type', 8)->orWhere('type', 9)->orWhere('type', 5)->orWhere('type', 6)->orWhere('type', 7);
+    }
+
+    public function scopeEvent($query, $event_id) {
+        return $query->where('event_id', $event_id);
+    }
+
     public function getWeatherDataAttribute() {
         $weather = Weather::where('session_id', $this->id)->get();
         return $weather;
-        return $this->hasMany(Weather::class);
     }
 
     public function getWinnerAttribute() {

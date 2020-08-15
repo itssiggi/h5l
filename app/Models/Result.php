@@ -50,6 +50,14 @@ class Result extends Model
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
+    public function scopeSession($query, $session_id) {
+        return $query->where('session_id', $session_id);
+    }
+
+    public function scopeDriver($query, $driver_id) {
+        return $query->where('driver_id', $driver_id);
+    }
+
     public function getGapAttribute() {
         return $this->session->winner->race_time - $this->race_time;
     }

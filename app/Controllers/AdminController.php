@@ -91,7 +91,10 @@ class AdminController extends Controller
     }
 
     public function postAddEvent($request, $response) {
-        $planned_start = (new DateTime($request->getParam('planned_start_date') . 'T' . $request->getParam('planned_start_time')))->modify('-2 hours');
+        $planned_start = new DateTime(
+            $request->getParam('planned_start_date') 
+            . 'T' . 
+            $request->getParam('planned_start_time'));
         $planned_start->setTimezone(new DateTimeZone('Europe/Berlin'));
 
         

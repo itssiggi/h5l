@@ -49,7 +49,7 @@ class EventController extends Controller
 
         if ($event === null) {
             return $response->withStatus(500);
-        } 
+        }
 
         $sessions = $event->sessions;
 
@@ -128,20 +128,6 @@ class EventController extends Controller
             return $this->c->view->render($response, 'events/show_no_results.twig', compact("event"));
         }
         
-    }
-
-    public function add($request, $response) {
-        $event = new Event;
-
-        $event->season_id = $request->getParam("season_id");
-        $event->circuit_id = $request->getParam("circuit_id");
-        $event->start_time = $request->getParam("start_time");
-        $event->prev_event_id = $request->getParam("prev_event_id");
-        $event->next_event_id = $request->getParam("next_event_id");
-
-        $event->save();
-
-        return $response->withJson($event);
     }
 
     public function showSetup($request, $response, $args) {
