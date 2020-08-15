@@ -27,6 +27,7 @@ class Event extends Model
     ];
 
     protected $fillable = [
+        'id',
         'name',
         'planned_start',
         'season_id',
@@ -109,11 +110,9 @@ class Event extends Model
     }
 
     public function getRaceWeatherAttribute() {
-        $sessions = $this->sessions;
-        foreach ($sessions as $session) {
-            if ($session->isRace) {
-                return $session->weather;
-            }
+        $session = Session::where('event_id', $this->id)->where('main_race', 1)->first();
+        if ($session) {
+            return $session->weather;
         }
         return 0;
     }

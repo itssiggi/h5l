@@ -63,6 +63,14 @@ class Session extends Model
         return $this->hasMany(Result::class)->orderBy('position', 'ASC');
     }
 
+    public function scopeMainRace($query) {
+        return $query->where('main_race', 1);
+    }
+
+    public function scopeSprintRace($query) {
+        return $query->where('sprint_race', 1);
+    }
+
     public function scopeRace($query) {
         return $query->where('type', 10)->orWhere('type', 11);
     }
