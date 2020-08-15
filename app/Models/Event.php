@@ -78,39 +78,33 @@ class Event extends Model
     }
 
     public function getMainRaceAttribute() {
-        $sessions = $this->sessions;
-        foreach ($sessions as $session) {
-            if ($session->isMainRace) {
-                return $session;
-            }
+        $session = Session::eventId($this->id)->mainRace()->first();
+        if ($session) {
+            return $session;
         }
         return 0;
     }
 
     public function getSprintRaceAttribute() {
-        $sessions = $this->sessions;
-        foreach ($sessions as $session) {
-            if ($session->isSprintRace) {
-                return $session;
-            }
+        $session = Session::eventId($this->id)->sprintRace()->first();
+        if ($session) {
+            return $session;
         }
         return 0;
     }
 
     public function getTyresAttribute() {
-        $tyres = array(
+        return array(
             $this->track->tyre_soft => 0,
             $this->track->tyre_medium => 1,
             $this->track->tyre_hard => 2,
             7 => 7,
             8 => 8
         );
-
-        return $tyres;
     }
 
     public function getRaceWeatherAttribute() {
-        $session = Session::where('event_id', $this->id)->where('main_race', 1)->first();
+        $session = Session::eventId($this->id)->mainRace()->first();
         if ($session) {
             return $session->weather;
         }
@@ -119,11 +113,9 @@ class Event extends Model
 
     public function getStatisticsAttribute()
     {
-        $sessions = $this->sessions;
-        foreach ($sessions as $session) {
-            if ($session->isMainRace) {
-                return $session->statistics;
-            }
+        $session = Session::eventId($this->id)->mainRace()->first();
+        if ($session) {
+            return $session->statistics;
         }
 
         return [
