@@ -50,7 +50,14 @@ class Result extends Model
         return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
-    public function scopeSession($query, $session_id) {
+    public function scopeFromEvent($query, $event_id) {
+        return $query->select('results.*')
+            ->join('sessions', 'sessions.id', '=', 'results.session_id')
+            ->join('events', 'events.id', '=', 'sessions.event_id')
+            ->where('events.id', $event_id);
+    }
+
+    public function scopeFromSession($query, $session_id) {
         return $query->where('session_id', $session_id);
     }
 
