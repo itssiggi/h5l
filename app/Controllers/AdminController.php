@@ -101,7 +101,6 @@ class AdminController extends Controller
         $event->planned_start = $planned_start;
         $event->name = $request->getParam("name");
         $event->season_id = $request->getParam("season_id");
-        $event->point_system = $request->getParam("point_system");
 
         $event->save();
 
