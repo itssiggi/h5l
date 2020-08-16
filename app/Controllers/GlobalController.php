@@ -94,21 +94,21 @@ class GlobalController extends Controller
 
                     if (!$results->isEmpty()) {
                         foreach ($results as $result) {
-                            $driver_ids[$driver_id] += $result->points;
+                            $driver_points[$driver_id] += $result->points;
                             if ($result->position == 1) {
                                 $driver_wins[$driver_id] += 1;
                             }
                         }
-
-                        // And new standings entry for this event and driver 
-                        $standing = new Standing;
-                        $standing->event_id = $event->id;
-                        $standing->season_id = $season_id;
-                        $standing->driver_id = $driver_id;
-                        $standing->points = $driver_ids[$driver_id];
-                        $standing->wins = $driver_wins[$driver_id];
-                        $standing->save();
                     }
+
+                    // And new standings entry for this event and driver 
+                    $standing = new Standing;
+                    $standing->event_id = $event->id;
+                    $standing->season_id = $season_id;
+                    $standing->driver_id = $driver_id;
+                    $standing->points = $driver_points[$driver_id];
+                    $standing->wins = $driver_wins[$driver_id];
+                    $standing->save();
                 }
 
                 // Calculate Positions
