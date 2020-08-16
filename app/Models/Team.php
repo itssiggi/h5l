@@ -25,7 +25,7 @@ class Team extends Model
     public function getPointsAttribute() {
         $totalPoints = 0;
         foreach ($this->drivers as $driver) {
-            $results = $driver->results;
+            $results = Result::fromDriver($driver->id)->isOfficial()->isRace()->get();
             if (!$results->isEmpty()) {
                 foreach ($results as $result) {
                     $totalPoints += $result->points;
