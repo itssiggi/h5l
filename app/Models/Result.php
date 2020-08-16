@@ -62,6 +62,16 @@ class Result extends Model
         return $query->where('session_id', $session_id);
     }
 
+    public function scopeFromSeason($query, $season_id) {
+        return $query->whereHas('session', function($query) use ($season_id) {
+            return $query->whereHas('event', function($query2) use ($season_id) {
+                return $query2->whereHas('season', function($query3) use ($season_id) {
+                    $query3->where('season_id', $season_id);
+                });
+            });
+        });
+    }
+
     public function scopeFromDriver($query, $driver_id) {
         return $query->where('driver_id', $driver_id);
     }

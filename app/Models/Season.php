@@ -23,8 +23,8 @@ class Season extends Model
         return $this->hasMany(Event::class);
     }
 
-    public function scopeCurrent() {
-        return $query->orderBy('id', 'DESC');
+    public function scopeCurrent($query) {
+        return $query->orderBy('id', 'DESC')->first();
     }
 
     public function bestQualifier(Season $season) {
