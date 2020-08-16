@@ -26,7 +26,7 @@ class Team extends Model
         $totalPoints = 0;
         foreach ($this->drivers as $driver) {
             $results = $driver->results;
-            if ($results) {
+            if (!$results->isEmpty()) {
                 foreach ($results as $result) {
                     $totalPoints += $result->points;
                 }
