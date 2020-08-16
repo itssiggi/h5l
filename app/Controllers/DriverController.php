@@ -33,14 +33,17 @@ class DriverController extends Controller
     }
 
     public function show($requst, $response, $args) {
+
         $driver = Driver::where('short_name', $args['name'])->first();
+
+        $results = Result::fromDriver($driver->id)->isRace()->get();
 
         if ($driver === null) {
             return $response->withStatus(500);
         }
 
         $driverTransformer = new Item($driver, new DriverTransformer);
-        $resultTransformer = new Collection($driver->results, new ResultTransformer);
+        $resultTransformer = new Collection($results, new ResultTransformer);
         $teamTransformer = new Item($driver->team, new TeamTransformer);
 
         $data = [

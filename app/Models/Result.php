@@ -61,8 +61,22 @@ class Result extends Model
         return $query->where('session_id', $session_id);
     }
 
-    public function scopeDriver($query, $driver_id) {
+    public function scopeFromDriver($query, $driver_id) {
         return $query->where('driver_id', $driver_id);
+    }
+
+    public function scopeIsRace($query) {
+        return $query
+            ->join('sessions', 'sessions.id', '=', 'results.session_id')
+            ->where('sessions.type', 10)
+            ->orWhere('sessions.type', 11);
+    }
+
+    public function scopeIsOfficial($query) {
+        return $query
+            ->join('sessions', 'sessions.id', '=', 'results.session_id')
+            ->join('events', 'events.id', '=', 'sessions.event_id')
+            ->where('events.regular_event', 1);
     }
 
     public function getGapAttribute() {
