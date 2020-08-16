@@ -42,14 +42,24 @@ class DriverController extends Controller
         }
 
         $driverTransformer = new Item($driver, new DriverTransformer);
-        $resultTransformer = new Collection($results, new ResultTransformer);
-        $teamTransformer = new Item($driver->team, new TeamTransformer);
-
         $data = [
-            "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"],
-            "team" => $this->c->fractal->createData($teamTransformer)->toArray()["data"],
-            "results" => $this->c->fractal->createData($resultTransformer)->toArray()["data"]
+            "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"]
         ];
+
+        if (!$results->isEmpty()) {
+            $resultTransformer = new Collection($results, new ResultTransformer);
+            $teamTransformer = new Item($driver->team, new TeamTransformer);
+            $data = [
+                "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"],
+                "team" => $this->c->fractal->createData($teamTransformer)->toArray()["data"],
+                "results" => $this->c->fractal->createData($resultTransformer)->toArray()["data"]
+            ];
+        } else {
+            $data = [
+                "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"]
+            ];
+        }
+    
         # return $response->withJson($data);
         return $this->c->view->render($response, 'drivers/show.twig', $data);
     }
