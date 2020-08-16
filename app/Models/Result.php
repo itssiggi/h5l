@@ -51,10 +51,11 @@ class Result extends Model
     }
 
     public function scopeFromEvent($query, $event_id) {
-        return $query->select('results.*')
-            ->join('sessions', 'sessions.id', '=', 'results.session_id')
-            ->join('events', 'events.id', '=', 'sessions.event_id')
-            ->where('events.id', $event_id);
+        return $query->whereHas('session', function($query) use ($event_id) {
+            return $query->whereHas('event', function($query2) use ($event_id) {
+                $query2->where('id', $event_id);
+            });
+        });
     }
 
     public function scopeFromSession($query, $session_id) {
@@ -66,17 +67,19 @@ class Result extends Model
     }
 
     public function scopeIsRace($query) {
-        return $query
-            ->join('sessions', 'sessions.id', '=', 'results.session_id')
-            ->where('sessions.type', 10)
-            ->orWhere('sessions.type', 11);
+        return $query->whereHas('session', function($query){
+            $query
+                ->where('type', 10)
+                ->orWhere('type', 11);
+        });
     }
 
     public function scopeIsOfficial($query) {
-        return $query
-            ->join('sessions', 'sessions.id', '=', 'results.session_id')
-            ->join('events', 'events.id', '=', 'sessions.event_id')
-            ->where('events.regular_event', 1);
+        return $query->whereHas('session', function($query) {
+            return $query->whereHas('event', function($query2) {
+                $query2->where('regular_event', 1);
+            });
+        });
     }
 
     public function getGapAttribute() {
@@ -93,13 +96,13 @@ class Result extends Model
 
     public function getEventPointsAttribute() {
         $eventPoints = null;
-        $sessions = Session::where('event_id', $this->session->event->id)->get();
-        if ($sessions) {
-            foreach ($sessions as $session) {
-                $result = Result::where('driver_id', $this->driver_id)->where('session_id', $session->id)->first();
-                if ($result) {
-                    $eventPoints = intval($eventPoints) + $result->points;
-                }
+        $results = Result::fromEvent($this->session->event->id)
+            ->fromDriver($this->driver_id)
+            ->isRace()
+            ->get();
+        if ($results) {
+            foreach ($results as $result) {
+                $eventPoints = intval($eventPoints) + $result->points;
             }
         }
         return $eventPoints;
