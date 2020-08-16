@@ -13,7 +13,8 @@ use App\Models\{
     Team,
     Track,
     Penalty,
-    Standing
+    Standing,
+    Season
 };
 
 use App\Controllers\{
@@ -68,31 +69,21 @@ class GlobalController extends Controller
     public static function recalculateStandings($season_id = 2) {
         $events = Event::where('season_id', $season_id)->where('regular_event', 1)->orderBy('planned_start', 'ASC')->get();
 
-        if ($events) {
+        if (!$events->isEmpty()) {
             # Delete old Standings
-            foreach ($events as $event) {
-                $standings = Standing::where('event_id', $event->id)->get();
-                if ($standings) {
-                    foreach ($standings as $standing) {
-                        $standing->forceDelete();
-                    }
+            $standings = Standing::fromSeason((Season::current())->id)->get();
+            if (!$standings->isEmpty()) {
+                foreach ($standings as $standing) {
+                    $standing->forceDelete();
                 }
             }
 
             # Create list of all drivers involved
-            $driver_ids = [];
-            foreach ($events as $event) {
-                $sessions = $event->sessions;
-                if ($sessions) {
-                    foreach ($sessions as $session) {
-                        $results = $session->results;
-                        if ($results) {
-                            foreach ($results as $result) {
-                                $driver_points[$result->driver_id] = 0;
-                                $driver_wins[$result->driver_id] = 0;
-                            }
-                        }
-                    }
+            $results = Result::fromSeason((Season::current())->id)->isRace()->isOfficial()->get();
+            if (!$results->isEmpty()) {
+                foreach ($results as $result) {
+                    $driver_points[$result->driver_id] = 0;
+                    $driver_wins[$result->driver_id] = 0;
                 }
             }
 
