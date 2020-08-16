@@ -62,6 +62,10 @@ class Result extends Model
         return $query->where('session_id', $session_id);
     }
 
+    public function scopeIsWinner($query) {
+        return $query->where('position', 1);
+    }
+
     public function scopeFromSeason($query, $season_id) {
         return $query->whereHas('session', function($query) use ($season_id) {
             return $query->whereHas('event', function($query2) use ($season_id) {
@@ -93,7 +97,7 @@ class Result extends Model
     }
 
     public function getGapAttribute() {
-        return $this->session->winner->race_time - $this->race_time;
+        return ($this->race_time * 1000 - $this->session->winner->race_time * 1000) / 1000;
     }
 
     public function getRaceTimeWithPenaltiesAttribute() {

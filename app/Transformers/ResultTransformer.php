@@ -40,17 +40,17 @@ class ResultTransformer extends TransformerAbstract
             'isRace' => $result->session->isRace,
             'gapToWinner' => [
                 "value" => $result->gap,
-                "string" => $this->formatTimeString($result->gap)
+                "string" => $this->formatGapString($result->gap)
             ],
             'race_time' => [
                 "value" => $result->race_time,
-                "string" => sprintf('%02d:%02d.%03d',(int) $result->race_time / 60, (int) $result->race_time % 60, fmod($result->race_time, 1) * 60)
+                "string" => $this->formatRaceTimeString($result->race_time)
             ],
             'fastest_lap_tyre' => $result->fastest_lap_tyre
         ];
     }
 
-    public function formatTimeString($value) {
+    public function formatGapString($value) {
         $mins = abs(intval(floor($value / 60 % 60)));
         $secs = abs(intval(floor($value % 60)));
         $milliSecs = abs((int)((($value) - floor($value)) * 1000));
@@ -64,6 +64,15 @@ class ResultTransformer extends TransformerAbstract
         }
 
         return $string;
+    }
+
+    public function formatRaceTimeString($value) {
+        $mins = abs(intval(floor($value / 60)));
+        $secs = abs(intval(floor($value % 60)));
+        $milliSecs = abs(intval((($value) - floor($value)) * 1000));
+
+        
+        return sprintf('%1d:%02d.%03d', $mins, $secs, $milliSecs);
     }
 
 }
