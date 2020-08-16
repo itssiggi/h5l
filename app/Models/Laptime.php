@@ -33,6 +33,22 @@ class Laptime extends Model
         return $this->belongsTo(Session::class);
     }
 
+    public function scopeFromEvent($query, $event_id) {
+        return $query->whereHas('session', function($query) use ($event_id) {
+            return $query->whereHas('event', function($query2) use ($event_id) {
+                $query2->where('id', $event_id);
+            });
+        });
+    }
+
+    public function scopeFromSession($query, $session_id) {
+        return $query->where('session_id', $session_id);
+    }
+
+    public function scopeFromDriver($query, $driver_id) {
+        return $query->where('driver_id', $driver_id);
+    }
+
     public function getRealTyreAttribute() {
         $tyres = $this->session->track->tyres;
         return $tyres[$this->tyre];
