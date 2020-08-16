@@ -89,10 +89,9 @@ class Session extends Model
     }
 
     public function getWinnerAttribute() {
-        foreach ($this->results as $result) {
-            if ($result->position == 1) {
-                return $result;
-            }
+        $result = Result::fromSession($this->id)->isWinner()->first();
+        if ($result) {
+            return $result;
         }
         return False;
     }
