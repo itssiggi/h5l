@@ -36,6 +36,14 @@ class Driver extends Model
         return $this->hasMany(Result::class)->orderBy('session_id', 'DESC');
     }
 
+    public function scopeFromSession($query, $session_id) {
+        return $query->whereHas('results', function($query) use ($session_id) {
+            return $query->whereHas('session', function($query2) use ($session_id) {
+                $query2->where('id', $session_id);
+            });
+        });
+    }
+
     public function getPositionAttribute() {
         $season = Season::latest()->first();
         $standings = Standing::join('events', 'standings.event_id', '=', 'events.id')->where('driver_id', $this->id)->orderBy('events.planned_start', 'Desc')->first();
