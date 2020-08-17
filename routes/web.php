@@ -53,6 +53,9 @@ $app->group('/admin', function () {
 
     $this->get('/invalidatePenalty/{id}', AdminController::class . ':invalidatePenalty')->setName('admin.invalidatePenalty');
     $this->get('/validatePenalty/{id}', AdminController::class . ':validatePenalty')->setName('admin.validatePenalty');
+
+    $this->get('/events/deleteResults', EventController::class . ':deleteEventResults')->setName('admin.deleteEventResults.index');
+    $this->get('/events/deleteResults/{id}', EventController::class . ':deleteEventResults')->setName('admin.deleteEventResults');
 })->add(new AuthMiddleware($container));;
 
 $app->group('/auth', function () {

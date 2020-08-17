@@ -14,13 +14,15 @@
 			</button>
 			<p class="pt-6 uppercase text-gray-500">Events</p>	
 			<a class="text-center w-full bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded mt-5" href="{{ path_for('admin.addEvent') }}">
-				<button class=" font-bold">
+				<button class="font-bold">
   					Event hinzufügen
   				</button>
   			</a>
-			<button class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-5">
-	  			Ergebnisse löschen
-			</button>
+  			<a class="text-center w-full bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded mt-5" href="{{ path_for('admin.deleteEventResults.index') }}">
+				<button class="font-bold">
+		  			Ergebnisse löschen
+				</button>
+			</a>
 			<button class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5">
 	  			Event bearbeiten
 			</button>

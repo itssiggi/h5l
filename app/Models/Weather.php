@@ -27,7 +27,15 @@ class Weather extends Model
         return $this->belongsTo(Session::class);
     }
 
-    public function scopeSession($query, $session_id) {
+    public function scopeFromSession($query, $session_id) {
         return $query->where('session_id', $session_id);
+    }
+
+    public function scopeFromEvent($query, $event_id) {
+        return $query->whereHas('session', function($query) use ($event_id) {
+            return $query->whereHas('event', function($query2) use ($event_id) {
+                $query2->where('id', $event_id);
+            });
+        });
     }
 }

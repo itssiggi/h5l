@@ -33,4 +33,12 @@ class Pitstop extends Model
     public function session() {
         return $this->belongsTo(Session::class);
     }
+
+    public function scopeFromEvent($query, $event_id) {
+        return $query->whereHas('session', function($query) use ($event_id) {
+            return $query->whereHas('event', function($query2) use ($event_id) {
+                $query2->where('id', $event_id);
+            });
+        });
+    }
 }

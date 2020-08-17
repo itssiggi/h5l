@@ -78,7 +78,7 @@ class Event extends Model
     }
 
     public function getMainRaceAttribute() {
-        $session = Session::eventId($this->id)->mainRace()->first();
+        $session = Session::fromEvent($this->id)->mainRace()->first();
         if ($session) {
             return $session;
         }
@@ -86,7 +86,7 @@ class Event extends Model
     }
 
     public function getSprintRaceAttribute() {
-        $session = Session::eventId($this->id)->sprintRace()->first();
+        $session = Session::fromEvent($this->id)->sprintRace()->first();
         if ($session) {
             return $session;
         }
@@ -104,7 +104,7 @@ class Event extends Model
     }
 
     public function getRaceWeatherAttribute() {
-        $session = Session::eventId($this->id)->mainRace()->first();
+        $session = Session::fromEvent($this->id)->mainRace()->first();
         if ($session) {
             return $session->weather;
         }
@@ -113,7 +113,7 @@ class Event extends Model
 
     public function getStatisticsAttribute()
     {
-        $session = Session::eventId($this->id)->mainRace()->first();
+        $session = Session::fromEvent($this->id)->mainRace()->first();
         if ($session) {
             return $session->statistics;
         }

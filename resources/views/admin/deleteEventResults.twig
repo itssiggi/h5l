@@ -1,0 +1,21 @@
+{% extends 'app.twig' %}
+{% block head %}
+    <!-- <link href="{{ asset('auth.css', 'css') }}" rel="stylesheet"> -->
+{% endblock %}
+{% block content %}
+    <div class="container max-w-2xl mx-auto">
+      <div class="bg-white shadow-md rounded pt-6 pb-8 mb-4">
+        <h1 class="text-center text-xl font-bold mb-5">Ergebnisse löschen</h1>
+        {% for event in events %}
+            <div class="flex justify-between border-b-2 px-8 border-gray-200 py-4">
+                <div class="self-center">{{ event.name }}</div>
+                <a class="text-center bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded self-center" href="{{ path_for('admin.deleteEventResults', {id: event.id}) }}">
+                    <button class="font-bold self-center">
+                        Ergebnisse Löschen
+                    </button>
+                </a>
+            </div>
+      {% endfor %}
+  </div>
+</div>
+{% endblock %}

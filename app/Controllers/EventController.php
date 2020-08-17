@@ -11,7 +11,10 @@ use App\Models\{
     Setup,
     Standing,
     SafetyCarPhase,
-    Weather
+    Weather,
+    Penalty,
+    Pitstop,
+    Laptime
 };
 
 use App\Controllers\Controller;
@@ -128,6 +131,30 @@ class EventController extends Controller
             return $this->c->view->render($response, 'events/show_no_results.twig', compact("event"));
         }
         
+    }
+
+    public function deleteEventResults($request, $response, $args) {
+        if ($args["id"] > 0) {
+            $event = Event::find($args["id"]);
+
+            $penalties = Penalty::fromEvent($event->id)->delete();
+            $pitstops = Pitstop::fromEvent($event->id)->delete();
+            $sc_phases = SafetyCarPhase::fromEvent($event->id)->delete();
+            $lap_times = Laptime::fromEvent($event->id)->delete();
+            $weather = Weather::fromEvent($event->id)->delete();
+            $results = Result::fromEvent($event->id)->delete();
+            $sessions = Session::fromEvent($event->id)->delete();
+
+            GlobalController::recalculateStandings();
+
+            $this->c->flash->addMessage('success', 'Ergebnisse von Event "' . $event->name . '" gelöscht.');
+
+            return $response->withRedirect($this->c->router->pathFor('admin.deleteEventResults.index'));
+        } else {
+            $events = Event::has('sessions')->get();
+            return $this->c->view->render($response, 'admin/deleteEventResults.twig', compact("events"));
+        }
+        return $response->withRedirect($this->c->router->pathFor('admin.index'));
     }
 
     public function showSetup($request, $response, $args) {
