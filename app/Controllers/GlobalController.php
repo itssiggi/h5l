@@ -113,11 +113,16 @@ class GlobalController extends Controller
 
                 // Calculate Positions
                 $standings = Standing::fromEvent($event->id)->orderBy('points', 'DESC')->get();
-                $position = 1;
+                $position = 0;
+                $lastPoints = -99;
                 foreach ($standings as $standing) {
+                    if ($lastPoints != $standing->points) {
+                        $position += 1;
+                    }
+                        
                     $standing->position = $position;
-                    $position += 1;
                     $standing->save();
+                    $lastPoints = $standing->points;
                 }
             }
 
