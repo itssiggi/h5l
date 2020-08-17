@@ -420,10 +420,23 @@
                                         </a>
                                     </div></div>
                                     {% if standing.points == 1 %}
-                                        <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkt</div>
+                                        <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkt
+                                            {% for result in results.mainRace %}
+                                                {% if standing.driver.id == result.driver.id and result.eventPoints > 0 %}
+                                                    <span class="text-green-500 text-sm self-center">(+{{ result.eventPoints }})</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     {% else %}
-                                        <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkte</div>
+                                        <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkte
+                                            {% for result in results.mainRace %}
+                                                {% if standing.driver.id == result.driver.id and result.eventPoints > 0 %}
+                                                    <span class="text-green-500 text-sm self-center">(+{{ result.eventPoints }})</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
                                     {% endif %}
+
                                 </div>
                             </div>
                         {% endfor %}
