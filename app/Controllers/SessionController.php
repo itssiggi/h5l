@@ -4,7 +4,9 @@ namespace App\Controllers;
 
 use App\Models\{
     Session,
-    Result
+    Result,
+    Driver,
+    Laptime
 };
 use App\Transformers\{
     SessionTransformer,
@@ -24,13 +26,48 @@ use League\Fractal\{
 class SessionController extends Controller
 {
     public function show($request, $response, $args) {
+
         $session = Session::find($args["id"]);
+        $drivers = Driver::fromSession($session->id)->get();
+
         if ($session) {
             $type = $session->type;
             $results = $session->results;
             $grid = $session->grid;
             $laptimes = $session->laptimes;
             $penalties = $session->penalties;
+
+            $laptimesWithoutBox = Laptime::fromSession($session->id)->where('boxlap', 0)->orderBy('time', 'ASC')->get();
+
+            $groups = $laptimesWithoutBox->split(2);
+            $medianLaptime = $groups[1]->first();
+            $medianLaptime->time = $medianLaptime->time * 1.1;
+
+            $chartData = array();
+            $min = $laptimesWithoutBox->first();
+            $max = $laptimesWithoutBox->last();
+
+            foreach ($drivers as $driver) {
+                $label = $driver->name;
+                $data = array();
+                foreach ($laptimes as $laptime) {
+                    if ($driver->id == $laptime->driver_id) {
+                        array_push($data, $laptime->timeAsString);
+                    }
+                }
+                $array = array(
+                    'label' => $driver->name,
+                    'fill' => false,
+                    'data' => $data
+                );
+
+                $chartInfo = array(
+                    'min' => $min->timeAsString,
+                    'max' => $medianLaptime->timeAsString,
+                    'laps' => $session->laps
+                );
+                array_push($chartData, $array);
+            }
 
             $sessionTransformer = new Item($session, new SessionTransformer);
             $resultTransformer = new Collection($results, new ResultTransformer);
@@ -50,7 +87,7 @@ class SessionController extends Controller
             } elseif ($type == 8) {
                 $template = "short_quali";
             }
-            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results", "grid", "laptimes", "penalties"));
+            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results", "grid", "laptimes", "penalties", "chartData", "chartInfo"));
         } else {
             return $response->withRedirect($this->c->router->pathFor('events.index'));
         }
