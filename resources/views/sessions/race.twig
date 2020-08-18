@@ -471,22 +471,28 @@ var ctx = document.getElementById("laptimeChart").getContext('2d');
 var myChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: Array.from(Array({{ chartInfo.laps | raw }}).keys()), // list of races,
+    labels: Array.from(Array({{ chartInfo.laps | raw }}), (_, i) => i + 1),
     datasets: {{ chartData | json_encode | raw }}
   },
   options: {
     scales: {
+        gridLines: {
+            display: false
+        },
       yAxes: [{
         type: 'time',
         time: {
           parser: 'm:s.SSS',
           unit: 'seconds',
           unitStepSize: 2,
-          min: '{{ chartInfo.min}}',
-          max: '{{ chartInfo.max }}',
+
           displayFormats: {
             'seconds': 'm:s'
           }
+        },
+        ticks: {
+            min: '{{ chartInfo.min}}',
+            max: '{{ chartInfo.max }}',
         }
       }]
     }

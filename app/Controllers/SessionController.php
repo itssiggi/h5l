@@ -28,7 +28,7 @@ class SessionController extends Controller
     public function show($request, $response, $args) {
 
         $session = Session::find($args["id"]);
-        $drivers = Driver::fromSession($session->id)->get();
+        $drivers = Driver::fromSession($session->id)->orderBy('team_id', 'ASC')->get();
 
         if ($session) {
             $type = $session->type;
@@ -37,7 +37,7 @@ class SessionController extends Controller
             $laptimes = $session->laptimes;
             $penalties = $session->penalties;
 
-            $laptimesWithoutBox = Laptime::fromSession($session->id)->where('boxlap', 0)->orderBy('time', 'ASC')->get();
+            $laptimesWithoutBox = Laptime::fromSession($session->id)->orderBy('time', 'ASC')->get();
 
             $groups = $laptimesWithoutBox->split(2);
             $medianLaptime = $groups[1]->first();
@@ -50,15 +50,22 @@ class SessionController extends Controller
             foreach ($drivers as $driver) {
                 $label = $driver->name;
                 $data = array();
+                $hidden = true;
+
                 foreach ($laptimes as $laptime) {
                     if ($driver->id == $laptime->driver_id) {
                         array_push($data, $laptime->timeAsString);
+                        if ($min == $laptime or $laptimes[6] == $laptime) {
+                            $hidden = false;
+                        }
                     }
                 }
                 $array = array(
                     'label' => $driver->name,
                     'fill' => false,
-                    'data' => $data
+                    'data' => $data,
+                    'hidden' => $hidden,
+                    'borderColor' => $driver->team->color
                 );
 
                 $chartInfo = array(
