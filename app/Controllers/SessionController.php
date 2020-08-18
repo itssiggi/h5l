@@ -41,7 +41,7 @@ class SessionController extends Controller
 
             $groups = $laptimesWithoutBox->split(2);
             $medianLaptime = $groups[1]->first();
-            $medianLaptime->time = $medianLaptime->time * 1.1;
+            $medianLaptime->time = $medianLaptime->time * 1.08;
 
             $chartData = array();
             $min = $laptimesWithoutBox->first();
@@ -68,13 +68,15 @@ class SessionController extends Controller
                     'borderColor' => $driver->team->color
                 );
 
-                $chartInfo = array(
-                    'min' => $min->timeAsString,
-                    'max' => $medianLaptime->timeAsString,
-                    'laps' => $session->laps
-                );
                 array_push($chartData, $array);
             }
+
+            $min->time = $min->time * 0.99;
+            $chartInfo = array(
+                'min' => $min->timeAsString,
+                'max' => $medianLaptime->timeAsString,
+                'laps' => $session->laps
+            );
 
             $sessionTransformer = new Item($session, new SessionTransformer);
             $resultTransformer = new Collection($results, new ResultTransformer);
