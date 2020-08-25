@@ -100,7 +100,7 @@ class Penalty extends Model
             33 => "Blockieren der Boxengasse",
             34 => "Frühstart",
             35 => "Kollision mit dem Safety car",
-            36 => "Únerlaubtes Überholen des Safety cars",
+            36 => "Unerlaubtes Überholen des Safety cars",
             37 => "Rasen unter SC",
             38 => "Rasen unter VSC",
             39 => "Formation lap below allowed speed",
