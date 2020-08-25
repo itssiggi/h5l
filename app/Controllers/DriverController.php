@@ -35,7 +35,7 @@ class DriverController extends Controller
     public function show($requst, $response, $args) {
         $driver = Driver::where('short_name', $args['name'])->first();
 
-        $results = Result::fromDriver($driver->id)->isRace()->isOfficial()->get();
+        $results = Result::fromDriver($driver->id)->isRace()->isOfficial()->get()->load('session')->sortBy('session.start', 'DESC');
 
         if ($driver === null) {
             return $response->withStatus(500);
