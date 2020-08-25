@@ -58,6 +58,12 @@ class Result extends Model
         });
     }
 
+    public function scopeIsMainRace($query) {
+        return $query->whereHas('session', function($query2) use ($event_id) {
+                $query2->where('main_race', 1);
+        });
+    }
+
     public function scopeFromSession($query, $session_id) {
         return $query->where('session_id', $session_id);
     }
