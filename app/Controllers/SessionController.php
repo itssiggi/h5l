@@ -35,7 +35,7 @@ class SessionController extends Controller
             $results = $session->results;
             $grid = $session->grid;
             $laptimes = $session->laptimes;
-            $penalties = $session->penalties;
+            $penalties = $session->penalties->sortBy('lap');
 
             $laptimesWithoutBox = Laptime::fromSession($session->id)->orderBy('time', 'ASC')->get();
 

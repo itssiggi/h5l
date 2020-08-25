@@ -17,7 +17,8 @@ use App\Models\{
 
 use App\Transformers\{
     SessionTransformer,
-    PenaltyTransformer
+    PenaltyTransformer,
+    DriverTransformer
 };
 
 use App\Controllers\{
@@ -49,17 +50,58 @@ class AdminController extends Controller
     public function getEditPenalties($request, $response, $args) {
         $session = Session::find($args["session_id"]);
         $penalties = Penalty::where('session_id', $session->id)->orderBy('driver_id', 'ASC')->get();
+        $drivers = Driver::fromSession($session->id)->get();
 
         $sessionTransformer = new Item($session, new SessionTransformer);
         $session = $this->c->fractal->createData($sessionTransformer)->toArray()["data"];
+
         $penaltyTransformer = new Collection($penalties, new PenaltyTransformer);
         $penalties = $this->c->fractal->createData($penaltyTransformer)->toArray()["data"];
 
-        return $this->c->view->render($response, 'admin/editPenalties.twig', compact("penalties", "session"));
+        $driverTransformer = new Collection($drivers, new DriverTransformer);
+        $drivers = $this->c->fractal->createData($driverTransformer)->toArray()["data"];
+
+        return $this->c->view->render($response, 'admin/editPenalties.twig', compact("penalties", "session", "drivers"));
     }
 
-    public function postEditPenalties($request, $response, $args) {
+    public function postAddPenalty($request, $response, $args) {
+        # Find Session
+        $session = Session::find($args["session_id"]);
+        
+        # Find Driver
+        $driver = Driver::find($request->getParam('driver_id'))->first();
 
+        # Find Result
+        $result = Result::fromDriver($driver->id)->fromSession($session->id)->first();
+
+        if ($session != null and $result != null) {
+
+            # Add Penalty to DB
+            $penalty = new Penalty;
+            $penalty->driver_id = $request->getParam('driver_id');
+            $penalty->lap = $request->getParam('lap');
+            $penalty->time = $request->getParam('time');
+            $penalty->infringement_type = $request->getParam('infringement_id');
+            $penalty->penalty_type = $request->getParam('penalty_id');
+            $penalty->session_id = $session->id;
+            $penalty->stewards = true;
+            $penalty->save();
+
+            # Update result of driver
+            $result->penalties += $penalty->time;
+            $result->save();
+
+            # Recalculate positions in session
+            GlobalController::recalculatePositions($penalty->session_id);
+
+            # Recalculate standings
+            GlobalController::recalculateStandings();
+
+            $this->c->flash->addMessage('success', 'Strafe für ' . $driver->name . ' hinzugefügt.');
+        } else {
+            $this->c->flash->addMessage('error', 'Session nicht gefunden.');
+        }
+        return $response->withRedirect($this->c->router->pathFor('admin.editPenalties', ["session_id" => $args["session_id"]]));
     }
 
     public function validatePenalty($request, $response, $args) {

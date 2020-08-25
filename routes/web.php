@@ -50,6 +50,7 @@ $app->group('/admin', function () {
     # Penalties
     $this->get('/sessions/{session_id}/editPenalties', AdminController::class . ':getEditPenalties')->setName('admin.editPenalties');
     $this->post('/sessions/{session_id}/editPenalties', AdminController::class . ':postEditPenalties')->setName('admin.editPenalties');
+    $this->post('/sessions/{session_id}/addPenalty', AdminController::class . ':postAddPenalty')->setName('admin.addPenalty');
 
     $this->get('/invalidatePenalty/{id}', AdminController::class . ':invalidatePenalty')->setName('admin.invalidatePenalty');
     $this->get('/validatePenalty/{id}', AdminController::class . ':validatePenalty')->setName('admin.validatePenalty');

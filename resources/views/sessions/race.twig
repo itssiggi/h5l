@@ -248,16 +248,19 @@
     </thead>
     <tbody>
       {% for result in results %}
-      {% set hasPen = false %}
-      {% set reverted = false %}
-      {% for penalty in penalties %}
-      {% if penalty.driver_id == result.driver.id %}
-      {% set hasPen = true %}
-      {% if penalty.reverted %}
-      {% set reverted = true %}
-      {% endif %}
-      {% endif %}
-      {% endfor %}
+        {% set hasPen = false %}
+        {% set reverted = false %}
+        {% set stewards = false %}
+        {% for penalty in penalties %}
+          {% if penalty.driver_id == result.driver.id %}
+            {% set hasPen = true %}
+            {% if penalty.reverted %}
+              {% set reverted = true %}
+            {% elseif penalty.stewards %}
+              {% set stewards = true %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
       {% if hasPen %}
       <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
         {% if result.result_status == 3 or result.result_status == 2 %}
@@ -282,7 +285,7 @@
 </td>
 <td class="py-4 px-6 hidden sm:table-cell flex">
   {{ result.penalties }} s
-  {% if reverted %}
+  {% if reverted or stewards %}
   <i class="hidden md:inline-block ml-4 self-center text-blue-400 fas fa-exclamation-triangle"></i>
   {% endif %}
 </td>
@@ -300,7 +303,7 @@
         {% for penalty in penalties %}
         {% if penalty.driver_id == result.driver.id %}
         {% set hasPen = true %}
-        <div class="py-4 flex w-full px-10 xl:px-32 border-b {% if penalty.reverted %} text-red-300 line-through {% endif %}">
+        <div class="py-4 flex w-full px-10 xl:px-32 border-b {% if penalty.reverted %} font-bold text-gray-400 line-through {% elseif penalty.stewards %} font-bold text-red-400 {% endif %} ">
           <div class="w-1/5 justify-center flex">
             {{ penalty.lap }}
         </div>

@@ -39,10 +39,6 @@ class Session extends Model
         return $this->belongsTo(Track::class);
     }
 
-    public function drivers() {
-        return $this->hasMany(Driver::class);
-    }
-
     public function penalties() {
         return $this->hasMany(Penalty::class);
     }

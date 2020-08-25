@@ -21,7 +21,8 @@ class PenaltyTransformer extends TransformerAbstract
             'infringementString' => $penalty->infringementString,
             'other_driver_id' => $penalty->other_driver_id,
             'time' => $penalty->time,
-            'reverted' => $penalty->reverted
+            'reverted' => $penalty->reverted,
+            'stewards' => $penalty->stewards
         ];
     }
 }
