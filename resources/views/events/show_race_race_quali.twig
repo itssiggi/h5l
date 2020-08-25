@@ -51,11 +51,13 @@
         <div>
             <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
                 <h2>Rennergebnis Hauptrennen</h2>
-                <button class="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-sm">
-                    <a href="{{ path_for('sessions.show', { id: sessions.mainRace.id }) }}">
-                        Details
-                    </a>
+                {% if sessions.mainRace.hasDetails %}
+                    <button class="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-sm">
+                        <a href="{{ path_for('sessions.show', { id: sessions.mainRace.id }) }}">
+                            Details
+                        </a>
                     </button>
+                {% endif %}
             </div>
 
             <div class="bg-white my-6 mb-10">
@@ -224,11 +226,13 @@
         <div>
             <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
                 <h2>Rennergebnis Sprintrennen</h2>
-                <button class="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-sm">
-                    <a href="{{ path_for('sessions.show', { id: sessions.sprintRace.id }) }}">
-                        Details
-                    </a>
+                {% if sessions.sprintRace.hasDetails %}
+                    <button class="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-sm">
+                        <a href="{{ path_for('sessions.show', { id: sessions.sprintRace.id }) }}">
+                            Details
+                        </a>
                     </button>
+                {% endif %}
             </div>
             <div class="bg-white my-6 mb-10">
                 <table class="text-center w-full">

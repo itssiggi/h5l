@@ -100,6 +100,10 @@ class Session extends Model
         return $this->type == 10 or $this->type == 11;
     }
 
+    public function getHasDetailsAttribute() {
+        return boolval($this->laptimes->count());
+    }
+
     public function getIsMainRaceAttribute() {
         return $this->isRace && $this->main_race;
     }

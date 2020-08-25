@@ -26,6 +26,7 @@ class SessionTransformer extends TransformerAbstract
             'formula' => $session->air_temp,
             'track' => $session->track,
             'statistics' => $session->statistics,
+            'hasDetails' => $session->hasDetails,
             'SC_phases' => $session->phases,
             'weatherData' => $session->weatherData,
             'laps' => $session->laps
