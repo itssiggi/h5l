@@ -49,6 +49,7 @@ class AdminController extends Controller
 
     public function getRecalculateStandings($request, $response) {
         GlobalController::recalculateStandings();
+        $this->c->flash->addMessage('success', 'WM Stand erfolgreich neu berechnet.');
         return $response->withRedirect($this->c->router->pathFor('admin.index'));
     }
 
