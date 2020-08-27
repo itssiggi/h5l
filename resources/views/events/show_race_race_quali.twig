@@ -132,7 +132,7 @@
                                 <td colspan="5" class="p-0" >
                                     <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
                                         <div class="flex flex-col items-center">
-                                            {% if result.stints %}
+                                            {% if result.stints and sessions.mainRace.hasDetails %}
                                                 <div class="pt-4 flex w-full xl:w-5/6 px-10 xl:px-32">
                                                     <div class="w-1/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Reifen</div>
                                                     <div class="w-2/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Stint</div>
@@ -304,7 +304,7 @@
                                 <td colspan="5" class="p-0" >
                                     <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
                                         <div class="flex flex-col items-center">
-                                            {% if result.stints %}
+                                            {% if result.stints and sessions.sprintRace.hasDetails %}
                                                 <div class="pt-4 flex w-full xl:w-5/6 px-10 xl:px-32">
                                                     <div class="w-1/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Reifen</div>
                                                     <div class="w-2/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Stint</div>
