@@ -116,17 +116,15 @@ class GlobalController extends Controller
                 $position = 0;
                 $lastPoints = -99;
                 foreach ($standings as $standing) {
+                    $realPosition += 1;
                     if ($lastPoints != $standing->points) {
-                        $position += 1;
+                        $position = $realPosition;
                     }
-                        
                     $standing->position = $position;
                     $standing->save();
                     $lastPoints = $standing->points;
                 }
             }
-
-
         }
     }
 }
