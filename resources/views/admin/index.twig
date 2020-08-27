@@ -12,6 +12,11 @@
 			<button class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-5">
 	  			Fahrer hinzufügen
 			</button>
+			<a class="text-center w-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded mt-5" href="{{ path_for('admin.recalculateStandings') }}">
+				<button class="font-bold">
+  					WM Stand neu berechnen
+  				</button>
+  			</a>
 			<p class="pt-6 uppercase text-gray-500">Events</p>	
 			<a class="text-center w-full bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded mt-5" href="{{ path_for('admin.addEvent') }}">
 				<button class="font-bold">

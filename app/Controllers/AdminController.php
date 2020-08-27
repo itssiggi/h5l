@@ -47,6 +47,11 @@ class AdminController extends Controller
         return $this->c->view->render($response, 'admin/addEvent.twig', compact("tracks"));
     }
 
+    public function getRecalculateStandings($request, $response) {
+        GlobalController::recalculateStandings();
+        return $response->withRedirect($this->c->router->pathFor('admin.index'));
+    }
+
     public function getEditPenalties($request, $response, $args) {
         $session = Session::find($args["session_id"]);
         $penalties = Penalty::where('session_id', $session->id)->orderBy('driver_id', 'ASC')->get();

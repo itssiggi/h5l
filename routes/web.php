@@ -57,6 +57,9 @@ $app->group('/admin', function () {
 
     $this->get('/events/deleteResults', EventController::class . ':deleteEventResults')->setName('admin.deleteEventResults.index');
     $this->get('/events/deleteResults/{id}', EventController::class . ':deleteEventResults')->setName('admin.deleteEventResults');
+
+    // Standings
+    $this->get('/standings/recalculate', AdminController::class . ':getRecalculateStandings')->setName('admin.recalculateStandings');
 })->add(new AuthMiddleware($container));;
 
 $app->group('/auth', function () {
