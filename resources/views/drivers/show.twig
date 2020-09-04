@@ -7,9 +7,14 @@
 <div>
     <div class="container mx-auto" >
         <div class="driverHeader w-full rounded-t-lg shadow-2xl flex flex-row">
-            <div class="w-full lg:w-3/5 flex flex-col justify-between">
+            <div class="w-full lg:w-3/5 flex flex-col justify-between p-20">
                 <div class="topLine flex flex-col justify-between items-center">
-                    <div class="w-full font-bold text-5xl text-white text-center md:text-left">{{ driver.name }}</div>
+                    <div class="w-full font-bold text-5xl text-white text-center md:text-left flex">
+                        <div class="self-center">{{ driver.name }} </div> 
+                        {% if driver.carNumber %}
+                            <span class="ml-10 text-6xl self-center tracking-wider text-gray-600">#{{driver.carNumber}}</span>
+                        {% endif %}
+                    </div>
                     <div class="text-left w-full mt-5">
                         <div class="flex justify-center md:justify-start">
                             <svg class="w-8 h-8 fill-current {% if driver.uses_steering_wheel %}text-gray-700 {% else %} text-gray-200 {% endif %}" xmlns="http://www.w3.org/2000/svg" width="30" viewBox="0 0 321.145 321.145">
@@ -40,12 +45,8 @@
                     </div>
                 </div>
             </div>
-            <div class="w-2/5 hidden lg:block self-center">
-                {% if driver.carNumber %}
-                <div class="carNumber uppercase shadow-3xl" style="color: {{ team.color }}"># {{ driver.carNumber }}</div>
-                {% else %}
-                <div class="carNumber uppercase shadow-3xl" style="color: {{ team.color }}"></div>
-                {% endif %}
+            <div class="w-2/5 hidden lg:block self-end">
+                <img src="{{ asset('avatars/siggi.png', 'img') }}" alt="">
             </div>
         </div>
         <div class="driverContent p-5 md:p-10 lg:p-20 bg-white shadow-2xl">
