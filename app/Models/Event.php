@@ -8,6 +8,7 @@ use DateTime;
 
 use App\Models\{
     Session,
+    Driver,
     Result,
     Season,
     Track,

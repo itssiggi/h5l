@@ -98,29 +98,28 @@ class EventController extends Controller
 
             foreach ($sessions as $session) {
                 if ($session->isRace) {
-                    $raceResultsTransformer = new Collection($session->results, new ResultTransformer);
-                    $race = $this->c->fractal->createData($raceResultsTransformer)->toArray()["data"];
+                    if ($session->isMainRace) {
+                        $mainRaceResultsTransformer = new Collection($session->results, new ResultTransformer);
+                        $mainRaceTransformer = new Item($session, new SessionTransformer);
+                    }
                 } elseif ($session->isQuali) {
                     $qualiResultsTransformer = new Collection($session->results, new ResultTransformer);
-                    $quali = $this->c->fractal->createData($qualiResultsTransformer)->toArray()["data"];
+                    $qualiTransformer = new Item($session, new SessionTransformer);
                 }
             }
 
             $eventTransformer = new Item($event, new EventTransformer);
             $standingsTransformer = new Collection($standings, new StandingTransformer);
-            $sessionTransformer = new Collection($sessions, new SessionTransformer);
-
-            if ($qualiResultsTransformer) {
-                
-            }
-            
             
             $data = [
                 "event" => $this->c->fractal->createData($eventTransformer)->toArray()["data"],
-                "sessions" => $this->c->fractal->createData($sessionTransformer)->toArray()["data"],
+                "sessions" => [
+                    "quali" => $this->c->fractal->createData($qualiTransformer)->toArray()["data"],
+                    "mainRace" => $this->c->fractal->createData($mainRaceTransformer)->toArray()["data"]
+                ],
                 "results" => [
-                    "quali" => $quali,
-                    "race" => $race
+                    "quali" => $this->c->fractal->createData($qualiResultsTransformer)->toArray()["data"],
+                    "mainRace" => $this->c->fractal->createData($mainRaceResultsTransformer)->toArray()["data"]
                 ],
                 "standings" => $this->c->fractal->createData($standingsTransformer)->toArray()["data"]
             ];

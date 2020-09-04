@@ -1,6 +1,5 @@
 <?php
 
-use \Interop\Container\ContainerInterface as ContainerInterface;
 use \App\Middleware\Cors;
 use \App\Middleware\ValidationErrorsMiddleware;
 use \App\Middleware\{

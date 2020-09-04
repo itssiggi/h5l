@@ -196,7 +196,7 @@ class AdminController extends Controller
 
     public function getAddEventwithResults ($request, $response, $args) {
         $drivers = Driver::all();
-        $teams = Team::all();
+        $teams = Team::limit(10)->get();
         $tracks = Track::all();
         $events = Event::all();
 
@@ -206,26 +206,25 @@ class AdminController extends Controller
     public function postAddEventwithResults ($request, $response) {
         $event = Event::find($request->getParam("event_id"));
         $track = Track::find($event->track_id);
-        $tyres = [$track->tyre_soft, $track->tyre_medium, $track->tyre_hard, 7, 8];
 
         $datetime = new DateTime();
         $timezone = new DateTimeZone('Europe/Berlin');
         $datetime->setTimezone($timezone);
 
-        $raceSessionId = rand(0, mt_rand());
-        $qualiSessionId = rand(0, mt_rand());
         $qualiStart = strtotime($event->planned_start);
         $qualiEnd = $qualiStart + 18*60 + rand(0,240);
         $raceStart = $qualiEnd + 4*60 + rand(0,240);
         $raceEnd = $raceStart + 44*60 + rand(0,480);
 
         $raceSession = new Session();
-        $raceSession->session_id = (float)$raceSessionId;
         $raceSession->weather = rand(0, 3);
         $raceSession->track_id = $event->track_id;
         $raceSession->start = $datetime->setTimestamp($raceStart);
         $raceSession->end = $datetime->setTimestamp($raceEnd);
         $raceSession->type = 10;
+        $raceSession->laps = $request->getParam('laps');
+        $raceSession->main_race = true;
+        $raceSession->point_system = 1;
         $raceSession->track_temp = rand(25, 35);
         $raceSession->air_temp = rand(19, 27);
         $raceSession->formula = 0;
@@ -256,24 +255,25 @@ class AdminController extends Controller
                 $driver = Driver::find($resultDriver["driverId"]);
                 $result = new Result();
 
-                $result->session_id = (float)$raceSessionId;
+                $result->session_id = $raceSession->id;
                 $result->driver_id = $driver->id;
-                $result->team_id = $driver->team_id;
+                $result->team_id = $resultDriver["teamId"];
                 $result->position = $position;
                 $result->result_status = 3;
                 if ($resultDriver["dnf"]) {
                     $result->result_status = 6;
                 }
-                $result->grid = $this->getQualiResultByDriverId($qualiResults, $driver->id);
+                $result->grid = $resultDriver["grid"];
                 $result->penalties = $resultDriver["penalties"];
                 $result->pitstops = $resultDriver["pitstops"];
+                $result->laps = $raceSession->laps;
                 $result->best_lap_time = $this->timeToFloatBestLap($resultDriver);
                 if ($baseRaceTime == 0) {
                     $baseRaceTime = $this->timeToFloatRaceTime($resultDriver);
-                    $result->race_time = $baseRaceTime;
+                    $result->race_time = $baseRaceTime - $result->penalties;
                 } else {
                     if ($this->timeToFloatRaceTime($resultDriver) > 0) {
-                        $result->race_time = $baseRaceTime + $this->timeToFloatRaceTime($resultDriver);
+                        $result->race_time = $baseRaceTime + $this->timeToFloatRaceTime($resultDriver) - $result->penalties;
                     } else {
                         $result->race_time = 0;
                     }       
@@ -283,12 +283,13 @@ class AdminController extends Controller
         }
 
         $qualiSession = new Session();
-        $qualiSession->session_id = (float)$qualiSessionId;
         $qualiSession->weather = rand(0, 3);
         $qualiSession->track_id = $event->track_id;
         $qualiSession->start = $datetime->setTimestamp($qualiStart);
         $qualiSession->end = $datetime->setTimestamp($qualiEnd);
         $qualiSession->type = 8;
+        $qualiSession->point_system = 0;
+        $qualiSession->laps = 99;
         $qualiSession->track_temp = rand(25, 35);
         $qualiSession->air_temp = rand(19, 27);
         $qualiSession->formula = 0;
@@ -302,19 +303,19 @@ class AdminController extends Controller
                 $driver = Driver::find($resultDriver["driverId"]);
                 $result = new Result();
 
-                $result->session_id = (float)$qualiSessionId;
+                $result->session_id = $qualiSession->id;
                 $result->driver_id = $driver->id;
-                $result->team_id = $driver->team_id;
+                $result->team_id = $resultDriver["teamId"];
                 $result->position = $position;
                 $result->result_status = 3;
                 if ($resultDriver["dnf"]) {
                     $result->result_status = 6;
                 }
                 $result->grid = 0;
-                $result->penalties = $resultDriver["penalties"];
+                $result->penalties = 0;
                 $result->pitstops = 0;
+                $result->laps = $qualiSession->laps;
                 $result->best_lap_time = $this->timeToFloatBestLap($resultDriver);
-                $result->fastest_lap_tyre = $tyres[$resultDriver["fastestLapTyre"]];
                 $result->race_time = $this->timeToFloatRaceTime($resultDriver);
                 $result->save();
             }

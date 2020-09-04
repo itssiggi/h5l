@@ -1,350 +1,361 @@
 {% extends 'app.twig' %}
 {% block head %}
     <link href="{{ asset('races_show.css', 'css') }}" rel="stylesheet">
+    <title>H5L - {{ event.name }}</title>
 {% endblock %}
 {% block content %}
     <div class="container mx-auto mb-10">
         <div class="driverHeader w-full rounded-t-lg shadow-2xl bg-contain flex flex-col" :style="cssVars">
             <div class="text-xl text-gray-600 mb-5 hidden md:flex">
-                    <div class="mr-10">
-                        {{ event.planned_start | date("d.m.Y") }}
+                <div class="mr-10">
+                    {{ event.planned_start | date("d.m.Y") }}
+                </div>
+                {% if event.youtube != "" %}
+                <a target="_blank" href="{{event.youtube}}">
+                    <i class=" text-2xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
+                </a> 
+                {% endif %}
+                </div>
+                <div class="topLine flex justify-between w-full items-center">
+                    <h2 class="font-bold text-center text-3xl sm:text-4xl md:text-5xl text-white">
+                        {{event.name}}
+                    </h2>
+                </div>
+                <p class="py-5 text-3xl text-center sm:text-left  text-gray-500 md:hidden">{{ event.planned_start | date("d.m.Y") }}</p>
+                <hr class="mt-8 md:hidden border-2 border-blue-400">
+                <div class="bottomLine mt-16 md:mt-20 w-full flex flex-col md:flex-row justify-between sm:px-12 md:p-0">
+                    <div class="fact flex flex-col items-center mb-10 md:mb-0 ">
+                        <div class="factTitle text-lg">Sieger</div>
+                        {% for result in results.mainRace %}
+                            {% if result.position == 1 %}
+                                <div class="factContent font-bold text-3xl">{{ result.driver.name }}</div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    <a target="_blank" href="{{result.youtube}}">
-                        <i class=" text-2xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
-                    </a> </div>
-            <div class="topLine flex justify-between w-full items-center">
-                <h2 class="font-bold text-center text-3xl sm:text-4xl md:text-5xl text-white">
-                    {{event.name}}
-                </h2>
+                    <div class="fact flex flex-col items-center mb-10 md:mb-0">
+                        <div class="factTitle text-lg">Pole</div>
+                        {% for result in results.mainRace %}
+                            {% if result.grid == 1 %}
+                                <div class="factContent font-bold text-3xl">{{ result.driver.name }}</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="fact flex flex-col items-center mb-10">
+                        <img class="h-16" width="64px" src="{{ asset('weather/' ~ sessions.mainRace.weather ~ '.svg', 'img') }}">
+                    </div>
+                    <div class="fact flex flex-col items-center md:mb-0">
+                        <div class="factTitle text-lg">Lufttemperatur</div>
+                        <div class="factContent font-bold text-3xl">{{ sessions.mainRace.air_temp }}°C</div>
+                    </div>
+                </div>
+                <div id="rectangle" class="hidden bg-cover" ></div>
             </div>
-            <p class="py-5 text-3xl text-center sm:text-left  text-gray-500 md:hidden">{{ event.planned_start | date("d.m.Y") }}</p>
-            <hr class="mt-8 md:hidden border-2 border-blue-400">
-            <div class="bottomLine mt-16 md:mt-20 w-full flex flex-col md:flex-row justify-between sm:px-12 md:p-0">
-                <div class="fact flex flex-col items-center mb-10 md:mb-0 ">
-                    <div class="factTitle text-lg">Sieger</div>
-                    <div class="factContent font-bold text-3xl">{{ results.race[0].driver.name }}</div>
-                </div>
-                <div class="fact flex flex-col items-center mb-10 md:mb-0">
-                    <div class="factTitle text-lg">Pole</div>
-                    {% for result in results.race %}
-                        {% if result.grid == 1 %}
-                            <div class="factContent font-bold text-3xl">{{ result.driver.name }}</div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                <div class="fact flex flex-col items-center mb-10">
-                    <img class="h-16" width="64px" src="{{ asset('weather/' ~ event.weather ~ '.svg', 'img') }}">
-                </div>
-                <div class="fact flex flex-col items-center md:mb-0">
-                    <div class="factTitle text-lg">Lufttemperatur</div>
-                    <div class="factContent font-bold text-3xl">{{ sessions[0].air_temp }}°C</div>
-                </div>
+    <div class="p-5 md:p-20 bg-white shadow-2xl">
+        <div>
+            <div class="race_results  pl-5 text-xl md:text-2xl font-bold  flex border-b-2 border-l-2 border-gray-300 rounded-bl-lg mt-5 md:mt-0 mb-8 pb-3 md:pl-10 justify-between lg:pr-5">
+                <h2>Rennergebnis</h2>
+                {% if sessions.mainRace.hasDetails %}
+                    <button class="bg-blue-700 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded text-sm">
+                        <a href="{{ path_for('sessions.show', { id: sessions.mainRace.id }) }}">
+                            Details
+                        </a>
+                    </button>
+                {% endif %}
             </div>
-            <div id="rectangle" class="hidden bg-cover" ></div>
-        </div>
-        <div class="p-5 md:p-20 flex h-10 hidden">
-            {% for lap in 0..sessions[1].laps %}
-                {% for phase in sc_phases %}
-                    {% if phase.begin == lap %}
-                        <div class="flex flex-row flex h-10 self-center">
-                            <div class="self-center relative">
-                                <div class="absolute mx-auto self-center -mt-6 text-sm" style="margin-left: -25%">SC STart</div>
-                                <svg height="20" width="20" class="self-center fill-current text-gray-400 relative left-0 bottom-0">
-                                   <circle cx="10" cy="4" r="5" />
-                                 </svg>
-                            </div>
 
-                        </div>
-                    {% endif %}
-                    <svg class="h-10 w-{{sessions[1].laps / 6}} text-red-300 fill-current self-center" viewBox="0 0 10 10">
-                    {% if phase.begin <= lap and phase.end >= lap %}
-                        <line x1="0" y1="0" x2="200" y2="0" style="stroke:#f6e05e;stroke-width:5" />
-                    {% else %}
-                        <line x1="0" y1="0" x2="200" y2="0" style="stroke:#004165;stroke-width:5" />
-                    {% endif %}
-                        </svg>
-                    {% if phase.end == lap %}
-                        <svg height="20" width="20" class="self-center fill-current text-gray-400">
-                           <circle cx="10" cy="4" r="5" />
-                         </svg>
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-
-                <svg class="h-3 w-3 text-blue-700 fill-current self-center">
-                    <circle cx="5" cy="0" r="5" fill="#004165" />
-                </svg>  
-        </div>
-        <div class=" p-5 md:p-20 bg-white shadow-2xl">
-            <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Rennergebnis</h2>
             <div class="bg-white my-6 mb-10">
-                <table class="text-center w-full"> <!--Border collapse doesn't work on this site yet but it's available in newer tailwind versions -->
-                  <thead>
-                    <tr>
-                      <th class="py-4 px-6 font-bold uppercase text-sm">#</th>
-                      <th class="py-4 px-6 font-bold uppercase text-sm">Fahrer</th>
-                      <th class="py-4 px-6 font-bold uppercase hidden sm:table-cell text-sm">Team</th>
-                      <th class="py-4 px-6 font-bold uppercase text-sm hidden lg:table-cell">Rennzeit</th>
-                      <th class="py-4 px-6 font-bold uppercase text-sm hidden sm:table-cell">Punkte</th>
-                  </tr>
-              </thead>
-              <tbody>
-                {% for result in results.race %}
-                    <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
-                        {% if result.result_status == 3 or result.result_status == 2 %}
-                            <td class="py-4 px-6">{{ result.position }}</td>
-                        {% elseif result.result_status == 4 %}
-                            <td class="text-gray-600 py-4 px-6 ">DSQ</td>
-                        {% else %}
-                            <td class="text-gray-600 py-4 px-6 ">DNF</td>
-                        {% endif %}
-                        <td class="flex justify-between my-5 px-6 text-center">
-                            <div class="border-l-4" style="opacity: 0.39; border-color: {{ result.team.color }}"></div>
-                            <div class="text-center w-full">
-                                <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
-                                    {{ result.driver.name }}
-                                </a>
-                                {% if result.youtube %}
-                                <a target="_blank" href="{{result.youtube}}">
-                                    <i class="ml-4 text-xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
-                                </a> 
-                                {% endif %}
-                            </div> 
-                        </td>
-                    <td class="py-4 px-6 hidden sm:table-cell">{{ result.team.name }}</td>
-                    {% if result.race_time.value %}
-                    <td class="py-4 px-6 hidden text-right lg:flex">
-                        <div class="w-1/2 self-center">
-                            {% if result.laps == result.sessionLaps %}
-                                {% if result.gapToWinner.value %}
-                                    + {{ result.gapToWinner.string }}
-                                {% else %}
-                                    {{ result.race_time.string }} 
+                <table class="text-center w-full">
+                    <thead>
+                        <tr>
+                          <th class="py-4 px-6 font-bold uppercase text-sm">#</th>
+                          <th class="py-4 px-6 font-bold uppercase text-sm">Fahrer</th>
+                          <th class="py-4 px-6 font-bold uppercase hidden sm:table-cell text-sm">Team</th>
+                          <th class="py-4 px-6 font-bold uppercase text-sm hidden lg:table-cell">Rennzeit</th>
+                          <th class="py-4 px-6 font-bold uppercase text-sm hidden sm:table-cell">Punkte</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for result in results.mainRace %}
+                        <tr id="resultRow" class="resultRow hover:bg-gray-100 w-full rounded-t-lg">
+                            {% if result.result_status == 3 or result.result_status == 2 %}
+                                <td class="py-4 px-6">{{ result.position }}</td>
+                            {% elseif result.result_status == 4 %}
+                                <td class="text-gray-600 py-4 px-6 ">DSQ</td>
+                            {% else %}
+                                <td class="text-gray-600 py-4 px-6 ">DNF</td>
+                            {% endif %}
+                            <td class="flex justify-between my-5 px-6 text-center">
+                                <div class="border-l-4" style="opacity: 0.39; border-color: {{ result.team.color }}"></div>
+                                <div class="text-center w-full">
+                                    <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
+                                        {{ result.driver.name }}
+                                    </a>
+                                    {% if result.youtube %}
+                                        <a target="_blank" href="{{result.youtube}}">
+                                            <i class="ml-4 text-xl text-gray-400 hover:text-red-600 fab fa-youtube"></i>
+                                        </a> 
+                                    {% endif %}
+                                </div> 
+                            </td>
+                            <td class="py-4 px-6 hidden sm:table-cell">{{ result.team.name }}</td>
+                            {% if result.race_time.value or result.laps < sessions.mainRace.laps %}
+                                <td class="py-4 px-6 hidden text-right lg:flex">
+                                    <div class="w-1/2 self-center">
+                                        {% if result.laps == result.sessionLaps %}
+                                            {% if result.gapToWinner.value %}
+                                                + {{ result.gapToWinner.string }}
+                                            {% else %}
+                                                {{ result.race_time.string }} 
+                                            {% endif %}
+                                        {% else %}
+                                            + {{ result.sessionLaps - result.laps }} R
+                                        {% endif %}    
+                                    </div>
+                                    {% if result.penalties > 0 %}
+                                        <div class="text-red-600 text-xs lowercase w-1/6 self-center">+ {{ result.penalties }}s</div>
+                                    {% elseif result.penalties < 0 %}
+                                        <div class="text-green-600 text-xs lowercase w-1/6 self-center">- {{ result.penalties | abs }}s</div>
+                                    {% else %}
+                                        <div class="text-red-600 text-xs lowercase w-1/6"></div>
+                                    </td>
+
                                 {% endif %}
                             {% else %}
-                                + {{ result.sessionLaps - result.laps }} R
-                            {% endif %}    
-                        </div>
-                        {% if result.penalties %}
-                            <div class="text-red-600 text-xs lowercase w-1/6 self-center">+ {{ result.penalties }}s</div>
-                        {% else %}
-                            <div class="text-red-600 text-xs lowercase w-1/6"></div>
-                        </td>
-
-                        {% endif %}
-                    {% else %}
-                        <td class="py-4 px-6 hidden lg:table-cell">-</td>
-                    {% endif %}
-                    <td class="py-4 px-6 hidden sm:table-cell">
-                        {{ result.points }}
-                    </td>
-                </tr>
-                {% if result != null %}
-                <tr class="resultInfo hidden">
-                    <td colspan="5" class="p-0" >
-                        <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
-                            <div class="flex flex-col items-center">
-                                {% if result.stints %}
-                                    <div class="pt-4 flex w-full xl:w-5/6 px-10 xl:px-32">
-                                        <div class="w-1/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Reifen</div>
-                                        <div class="w-2/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Stint</div>
-                                        <div class="w-2/6 justify-center text-xs flex text-center uppercase text-gray-500"><i class="fas fa-chart-bar text-blue-400 self-center"></i></div>
-                                        <div class="w-1/6 justify-center text-xs flex text-center uppercase text-gray-500"><i class="fas fa-stopwatch text-blue-400 self-center"></i></i></div>
-                                    </div>
-                                    {% for stint in result.stints %}
-                                        <div class="py-4 flex w-full xl:w-5/6 px-10 xl:px-32  border-b">
-                                            <div class="w-1/6 lg:w-1/6 flex justify-center">
-                                                <img class="w-8" src="{{ asset('tyres/' ~ stint.tyre ~ '.svg', 'img') }}" >
-                                            </div>
-                                            <div class="w-1/2 lg:w-2/6 justify-center flex">
-                                                <div class="mr-4 text-gray-500 font-bold w-1/3 self-center -mr-6">
-                                                    {% if stint.begin == 0 %}
-                                                        <i class="text-green-600 fa fa-flag" aria-hidden="true"></i>
-                                                    {% else %}
-                                                        R {{ '%02d'| format(stint.begin) }}
-                                                    {% endif %}
+                                <td class="py-4 px-6 hidden lg:table-cell">-</td>
+                            {% endif %}
+                            <td class="py-4 px-6 hidden sm:table-cell">
+                                {{ result.points }}
+                            </td>
+                        </tr>
+                        {% if result != null %}
+                            <tr class="resultInfo hidden">
+                                <td colspan="5" class="p-0" >
+                                    <div class="bg-gray-100 border-r-2 border-l-2 border-b-2 flex flex-col shadow-lg rounded-b-lg">
+                                        <div class="flex flex-col items-center">
+                                            {% if result.stints and sessions.mainRace.hasDetails %}
+                                                <div class="pt-4 flex w-full xl:w-5/6 px-10 xl:px-32">
+                                                    <div class="w-1/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Reifen</div>
+                                                    <div class="w-2/6 justify-center text-xs flex text-center uppercase text-gray-500 self-center">Stint</div>
+                                                    <div class="w-2/6 justify-center text-xs flex text-center uppercase text-gray-500"><i class="fas fa-chart-bar text-blue-400 self-center"></i></div>
+                                                    <div class="w-1/6 justify-center text-xs flex text-center uppercase text-gray-500"><i class="fas fa-stopwatch text-blue-400 self-center"></i></i></div>
                                                 </div>
-                                                <i class="fa fa-arrow-right self-center text-blue-600 w-1/3" aria-hidden="true"></i>
-                                                <div class="ml-4 text-gray-500 font-bold self-center w-1/3 -ml-6">
+                                                {% for stint in result.stints %}
+                                                    <div class="py-4 flex w-full xl:w-5/6 px-10 xl:px-32  border-b">
+                                                        <div class="w-1/6 lg:w-1/6 flex justify-center">
+                                                            <img class="w-8 h-8" src="{{ asset('tyres/' ~ stint.tyre ~ '.svg', 'img') }}" >
+                                                        </div>
+                                                        <div class="w-1/2 lg:w-2/6 justify-center flex">
+                                                            <div class="mr-4 text-gray-500 font-bold w-1/3 self-center -mr-6">
+                                                                {% if stint.begin == 0 %}
+                                                                    <i class="text-green-600 fa fa-flag" aria-hidden="true"></i>
+                                                                {% else %}
+                                                                    R {{ '%02d'| format(stint.begin) }}
+                                                                {% endif %}
+                                                            </div>
+                                                            <i class="fa fa-arrow-right self-center text-blue-600 w-1/3" aria-hidden="true"></i>
+                                                            <div class="ml-4 text-gray-500 font-bold self-center w-1/3 -ml-6">
 
-                                                    {% if result.result_status != 3 and stint.end == result.laps %}
-                                                        {{ ["DSQ", "", "DNF"][result.result_status - 4] }}
-                                                    {% elseif stint.end == result.laps %}
-                                                        <i class="fa fa-flag-checkered text-gray-800" aria-hidden="true"></i>
-                                                    {% else %}
-                                                        R {{ '%02d'| format(stint.end) }}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="w-2/6 flex hidden lg:flex justify-center">
-                                                <div class="text-gray-600 uppercase self-center">{{ stint.averageTime }}</div>
-                                            </div>
-                                            <div class="w-2/6 lg:w-1/6 justify-center flex {% if not stint.pitstopTime %} hidden {% endif %} ">
-                                                <div class="text-gray-600 self-center">{{ stint.pitstopTime }} s</div>
-                                            </div>
+                                                                {% if result.result_status != 3 and stint.end == result.laps %}
+                                                                    {{ ["DSQ", "", "DNF"][result.result_status - 4] }}
+                                                                {% elseif stint.end == result.laps %}
+                                                                    <i class="fa fa-flag-checkered text-gray-800" aria-hidden="true"></i>
+                                                                {% else %}
+                                                                    R {{ '%02d'| format(stint.end) }}
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="w-2/6 flex hidden lg:flex justify-center">
+                                                            <div class="text-gray-600 uppercase self-center"><a href="{{ path_for('sessions.show', { id: sessions.sprintRace.id }) }}#laptimes">{{ stint.averageTime }}</a></div>
+                                                        </div>
+                                                        <div class="w-2/6 lg:w-1/6 justify-center flex {% if not stint.pitstopTime %} hidden {% endif %} ">
+                                                            <div class="text-gray-600 self-center">{{ stint.pitstopTime }} s</div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <div class="py-4 w-full px-10 xl:px-32 text-sm border-b-2 text-center uppercase text-gray-500">Keine Stints verfügbar</div>
+                                            {% endif %}
+
                                         </div>
-                                    {% endfor %}
-                                {% else %}
-                                    <div class="py-4 w-full px-10 xl:px-32 text-sm border-b-2 text-center uppercase text-gray-500">Keine Stints verfügbar</div>
-                                {% endif %}
-                                
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="trivia mb-10">
+            <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Statistik</h2>
+            <div class="flex flex-col">
+                <div class="flex flex-row flex-wrap justify-around">
+                    {% if event.statistics.fastest_lap %}
+                        <div class="flex flex-row items-center lg:mx-16 w-full lg:w-auto md:justify-center my-10">
+                            <div class="flex flex-col border-r-2 lg:pr-10 border-purple-300 w-1/2 lg:w-auto">
+                                <div class="text-5xl text-center">{{ event.statistics.fastest_lap.value }}  </div>
+                                <div class="text-sm uppercase text-gray-500 text-center">Schnellste Runde</div>
                             </div>
+                            <div class="lg:ml-10 w-1/2 lg:w-auto">
+                                <div class="font-bold text-2xl text-gray-700  text-center">{{ event.statistics.fastest_lap.driver }}</div>
+                            </div>    
                         </div>
-                    </td>
-                </tr>
-                {% endif %}
-                
-                {% endfor %}
-        </tbody>
-    </table>
-</div>
-<div class="trivia mb-10">
-    <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Statistik</h2>
-    <div class="flex flex-col">
-        <div class="flex flex-row flex-wrap justify-around">
-            {% if event.statistics.fastest_lap %}
-            <div class="flex flex-row items-center mb-4 lg:mx-16 w-full lg:w-auto md:justify-center my-10">
-                <div class="flex flex-col border-r-2 lg:pr-10 border-purple-300 w-1/2 lg:w-auto">
-                    <div class="text-5xl text-center">{{ event.statistics.fastest_lap.value }}  </div>
-                    <div class="text-sm uppercase text-gray-500 text-center">Schnellste Runde</div>
+                    {% endif %}
+                    {% if event.statistics.most_pitstops.value > 0 %}       
+                    <div class="flex flex-row items-center mb-4 lg:mx-16 w-full lg:w-auto md:justify-center my-10">
+                        <div class="flex flex-col border-r-2 lg:pr-10 border-blue-300 w-1/2 lg:w-auto">
+                            <div class="text-5xl text-center">{{ event.statistics.most_pitstops.value }}</div>
+                            <div class="text-sm uppercase text-gray-500 text-center">Meiste Boxenstops</div>
+                        </div>
+                        <div class="lg:ml-10 w-1/2 lg:w-auto">
+                            <div class="font-bold text-2xl text-gray-700  text-center">{{ event.statistics.most_pitstops.driver }}</div>
+                        </div>    
+                    </div>
+                    {% endif %}
+                    {% if event.statistics.most_penalties.value > 0 %}       
+                        <div class="flex flex-row items-center mb-4 lg:mx-16 w-full lg:w-auto md:justify-center my-10">
+                            <div class="flex flex-col border-r-2 lg:pr-10 border-red-300 w-1/2 lg:w-auto">
+                                <div class="text-5xl text-center">{{ event.statistics.most_penalties.value }} <span class="text-2xl text-gray-800">s</span></div>
+                                <div class="text-sm uppercase text-gray-500 text-center">Meiste Strafen</div>
+                            </div>
+                            <div class="lg:ml-10 w-1/2 lg:w-auto">
+                                <div class="font-bold text-2xl text-gray-700 text-center">{{ event.statistics.most_penalties.driver }}</div>
+                            </div>    
+                        </div>
+                    {% endif %}
                 </div>
-                <div class="lg:ml-10 w-1/2 lg:w-auto">
-                    <div class="font-bold text-2xl text-gray-700  text-center">{{ event.statistics.fastest_lap.driver }}</div>
-                </div>    
             </div>
-            {% endif %}
-            <div class="flex flex-row items-center mb-4 lg:mx-16 w-full lg:w-auto md:justify-center my-10">
-                <div class="flex flex-col border-r-2 lg:pr-10 border-blue-300 w-1/2 lg:w-auto">
-                    <div class="text-5xl text-center">{{ event.statistics.most_pitstops.value }}</div>
-                    <div class="text-sm uppercase text-gray-500 text-center">Meiste Boxenstops</div>
-                </div>
-                <div class="lg:ml-10 w-1/2 lg:w-auto">
-                    <div class="font-bold text-2xl text-gray-700  text-center">{{ event.statistics.most_pitstops.driver }}</div>
-                </div>    
-            </div>
-            {% if event.statistics.most_penalties.value > 0 %}       
-            <div class="flex flex-row items-center mb-4 lg:mx-16 w-full lg:w-auto md:justify-center my-10">
-                <div class="flex flex-col border-r-2 lg:pr-10 border-red-300 w-1/2 lg:w-auto">
-                    <div class="text-5xl text-center">{{ event.statistics.most_penalties.value }} <span class="text-2xl text-gray-800">s</span></div>
-                    <div class="text-sm uppercase text-gray-500 text-center">Meiste Strafen</div>
-                </div>
-                <div class="lg:ml-10 w-1/2 lg:w-auto">
-                    <div class="font-bold text-2xl text-gray-700 text-center">{{ event.statistics.most_penalties.driver }}</div>
-                </div>    
-            </div>
-            {% endif %}
         </div>
-    </div>
-</div>
-<div class="grid mb-10">
-    <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 lg:mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Qualifying</h2>
-    <div class="flex flex-row w-full mx-auto flex-wrap">
-        <div class="flex flex-col w-full md:w-1/2">
-            {% for result in results.quali %}
-                {% if result.position % 2 == 1 %}
-                <div class="box-border flex flex-row starting-box mt-5 sm:mt-16 shadow-lg rounded-lg w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
-                    <div class="w-1/6 py-3 text-center font-bold bg-gray-200 text-gray-600 rounded-tl-lg flex h-full"><span class="m-auto">{{ result.position }}</span ></div>
-                    <div style="opacity: 0.65; border-color: {{ result.team.color }}" class="w-5/6 py-3 flex border-l-4 rounded-tr-lg justify-between relative" >
-                        <div class="text-center flex justify-between w-3/5"><span class="ml-5 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ result.team.color }}"></span>
-                            <div class="w-full">
-                                <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
-                                    {{ result.driver.name }}
-                                </a>
-                        </div> </div>
-                        <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
-                        {% if result.fastest_lap_tyre %}
-                            <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
-                        {% endif %}
+        <div>
+        <div class="grid mb-10">
+            <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 lg:mb-8 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Qualifying</h2>
+            <div class="flex flex-row w-full mx-auto flex-wrap">
+                <div class="flex flex-col w-full md:w-1/2">
+                    {% for result in results.quali %}
+                        {% if result.position % 2 == 1 %}
+                            <div class="box-border flex flex-row starting-box mt-5 sm:mt-16 shadow-lg rounded-lg w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
+                                <div class="w-1/6 py-3 text-center font-bold bg-gray-200 text-gray-600 rounded-tl-lg flex h-full"><span class="m-auto">{{ result.position }}</span ></div>
+                                <div style="opacity: 0.65; border-color: {{ result.team.color }}" class="w-5/6 py-3 flex border-l-4 rounded-tr-lg justify-between relative" >
+                                    <div class="text-center flex justify-between w-3/5"><span class="ml-5 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ result.team.color }}"></span>
+                                        <div class="w-full">
+                                            <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
+                                                {{ result.driver.name }}
+                                            </a>
+                                        </div> </div>
+                                        {% if result.best_lap_time > 0 %}
+                                            <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
+                                            {% if result.fastest_lap_tyre %}
+                                                <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="w-2/5 text-center text-gray-500">Keine Zeit</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="flex flex-col w-full md:w-1/2 md:mt-10">
+                        {% for result in results.quali %}
+                            {% if result.position % 2 == 0 %}
+                                <div class="box-border flex flex-row starting-box mt-5 md:mt-16 shadow-lg rounded-lg w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
+                                    <div class="w-1/6 py-3 text-center font-bold bg-gray-200 text-gray-600 rounded-tl-lg flex h-full"><span class="m-auto">{{ result.position }}</span ></div>
+                                    <div style="opacity: 0.65; border-color: {{ result.team.color }}" class="w-5/6 py-3 flex border-l-4 rounded-tr-lg justify-between relative" >
+                                        <div class="text-center flex justify-between w-3/5"><span class="ml-5 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ result.team.color }}"></span>
+                                            <div class="w-full">
+                                                <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
+                                                    {{ result.driver.name }}
+                                                </a>
+                                            </div> </div>
+                                            {% if result.best_lap_time > 0 %}
+                                                <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
+                                                {% if result.fastest_lap_tyre %}
+                                                    <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
+                                                {% endif %}
+                                            {% else %}
+                                                <div class="w-2/5 text-center text-gray-500">Keine Zeit</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div class="flex flex-col w-full md:w-1/2 md:mt-10">
-            {% for result in results.quali %}
-                {% if result.position % 2 == 0 %}
-                <div class="box-border flex flex-row starting-box mt-5 md:mt-16 shadow-lg rounded-lg w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
-                    <div class="w-1/6 py-3 text-center font-bold bg-gray-200 text-gray-600 rounded-tl-lg flex h-full"><span class="m-auto">{{ result.position }}</span ></div>
-                    <div style="opacity: 0.65; border-color: {{ result.team.color }}" class="w-5/6 py-3 flex border-l-4 rounded-tr-lg justify-between relative" >
-                        <div class="text-center flex justify-between w-3/5"><span class="ml-5 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ result.team.color }}"></span>
-                            <div class="w-full">
-                                <a href="{{ path_for('drivers.show', { name: result.driver.short_name}) }}">
-                                    {{ result.driver.name }}
-                                </a>
-                        </div> </div>
-                        <div class="w-2/5 text-center text-gray-500">{{ result.best_lap_time }}</div>
-                        {% if result.fastest_lap_tyre %}
-                            <img class="hidden sm:block md:hidden lg:block w-6 mr-4" src="{{ asset('tyres/' ~ result.fastest_lap_tyre ~ '.svg', 'img') }}" alt="">
-                        {% endif %}
-                    </div>
-                </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-</div>
-<div class="standings mb-10">
-    <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 lg:my-16 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Tabelle</h2>
-        <div class="container md:container-sm mx-auto">
-            {% for standing in standings %}
-                <div class="box-border flex flex-row starting-box mt-5 w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
-                    <div class="w-1/6 py-3 text-center border-2 font-bold bg-gray-300 text-gray-600 rounded-tl-lg rounded-bl-lg flex h-full"><span class="m-auto"> {{ standing.position }}</span ></div>
-                    <div class="w-5/6 py-3 flex border-gray-300 border-2 rounded-tr-lg rounded-br-lg justify-between">
-                        <div class="text-center flex justify-between w-3/5"><span class=" hidden md:block ml-10 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ standing.team.color }}"></span><div class="w-full">
-                            
-                                <a href="{{ path_for('drivers.show', { name: standing.driver.short_name}) }}">
-                                    {{standing.driver.name}}
-                                </a>
-                        </div></div>
-                        {% if standing.points == 1 %}
-                            <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkt</div>
-                        {% else %}
-                            <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkte</div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+                <div class="standings mb-10">
+                    <h2 class="race_results pl-5 text-xl md:text-2xl font-bold mt-5 md:mt-0 lg:my-16 pb-3 md:pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Tabelle</h2>
+                    <div class="container md:container-sm mx-auto">
+                        {% for standing in standings %}
+                            <div class="box-border flex flex-row starting-box mt-5 w-full sm:w-5/6 lg:w-3/4 text-center mx-auto border-gray-300">
+                                <div class="w-1/6 py-3 text-center border-2 font-bold bg-gray-300 text-gray-600 rounded-tl-lg rounded-bl-lg flex h-full"><span class="m-auto"> {{ standing.position }}</span ></div>
+                                <div class="w-5/6 py-3 flex border-gray-300 border-2 rounded-tr-lg rounded-br-lg justify-between">
+                                    <div class="text-center flex justify-between w-3/5"><span class=" hidden md:block ml-10 mr-2 text-center border-r-4" style="opacity: 0.5; border-color: {{ standing.team.color }}"></span><div class="w-full">
 
-</div>
-</div>
-</div>
-</div>
-{% endblock %}
-{% block script %}
-<script>
-    var elements  = document.getElementsByClassName('resultRow');
-    var infoElements  = document.getElementsByClassName('resultInfo');
+                                        <a href="{{ path_for('drivers.show', { name: standing.driver.short_name}) }}">
+                                            {{standing.driver.name}}
+                                        </a>
+                                    </div></div>
+                                    {% if standing.points == 1 %}
+                                        <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkt
+                                            {% for result in results.mainRace %}
+                                                {% if standing.driver.id == result.driver.id and result.eventPoints > 0 %}
+                                                    <span class="text-green-500 text-sm self-center">(+{{ result.eventPoints }})</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class=" w-2/5 text-center text-gray-600">{{ standing.points }} Punkte
+                                            {% for result in results.mainRace %}
+                                                {% if standing.driver.id == result.driver.id and result.eventPoints > 0 %}
+                                                    <span class="text-green-500 text-sm self-center">(+{{ result.eventPoints }})</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
 
-    Array.from(elements).forEach(function(element) {
-        element.addEventListener('click', function(){
-            func(element)
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {% block script %}
+        <script>
+        var elements  = document.getElementsByClassName('resultRow');
+        var infoElements  = document.getElementsByClassName('resultInfo');
+
+        Array.from(elements).forEach(function(element) {
+            element.addEventListener('click', function(){
+                func(element)
+            });
         });
-    });
 
-    function func (el) {
-        if (infoElements.length) {
-            if (el.nextElementSibling.classList.contains('md:table-row')) {
-                resetAll(); 
-            } else {
-                resetAll(); 
-                el.classList.add("md:bg-gray-200", "md:border-t", "md:border-l", "md:border-r", "md:font-bold");
-                el.nextElementSibling.classList.remove("hidden");
-                el.nextElementSibling.classList.add("hidden", "md:table-row");
+        function func (el) {
+            if (infoElements.length) {
+                if (el.nextElementSibling.classList.contains('md:table-row')) {
+                    resetAll(); 
+                } else {
+                    resetAll(); 
+                    el.classList.add("md:bg-gray-200", "md:border-t", "md:border-l", "md:border-r", "md:font-bold");
+                    el.nextElementSibling.classList.remove("hidden");
+                    el.nextElementSibling.classList.add("hidden", "md:table-row");
+                }
             }
-        }
-    };
+        };
 
-    function resetAll() {
-        var infos = document.getElementsByClassName("resultInfo");
-        var rows = document.getElementsByClassName("resultRow");
+        function resetAll() {
+            var infos = document.getElementsByClassName("resultInfo");
+            var rows = document.getElementsByClassName("resultRow");
 
-        for (var i = 0; i < infos.length; i++) {
-          infos[i].classList.add("hidden");
-          infos[i].classList.remove("md:table-row");
-        } 
+            for (var i = 0; i < infos.length; i++) {
+              infos[i].classList.add("hidden");
+              infos[i].classList.remove("md:table-row");
+          } 
 
-        for (var i = 0; i < rows.length; i++) {
+          for (var i = 0; i < rows.length; i++) {
             rows[i].classList.remove("md:bg-gray-200", "md:border-t", "md:border-l", "md:border-r", "md:font-bold");
             rows[i].classList.remove("md:bg-gray-100");
         } 
@@ -354,6 +365,6 @@
 
 
 
-</script>
+    </script>
 
-{% endblock %}
+    {% endblock %}
