@@ -14,5 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return redirect()->route('events.index');
+})->name('index');
+
+Route::get('/events', 'EventController@index')->name('events.index');
+Route::get('/events/{id}', 'EventController@index')->name('events.show');
+Route::get('/standings', 'StandingController@index')->name('standings.current');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
