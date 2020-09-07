@@ -102,8 +102,10 @@
                                 <td class="py-4 px-6 hidden text-right lg:flex">
                                     <div class="w-1/2 self-center">
                                         {% if result.laps == result.sessionLaps %}
-                                            {% if result.gapToWinner.value %}
-                                                + {{ result.gapToWinner.string }}
+                                            {% if result.gapToWinner.value < 0 %}
+                                            - {{ result.gapToWinner.string }}
+                                            {% elseif result.gapToWinner.value > 0 %}
+                                            + {{ result.gapToWinner.string }}
                                             {% else %}
                                                 {{ result.race_time.string }} 
                                             {% endif %}
@@ -276,8 +278,10 @@
                                 <td class="py-4 px-6 hidden text-right lg:flex">
                                     <div class="w-1/2 self-center">
                                         {% if result.laps == result.sessionLaps %}
-                                            {% if result.gapToWinner.value %}
-                                                + {{ result.gapToWinner.string }}
+                                            {% if result.gapToWinner.value < 0 %}
+                                            - {{ result.gapToWinner.string }}
+                                            {% elseif result.gapToWinner.value > 0 %}
+                                            + {{ result.gapToWinner.string }}
                                             {% else %}
                                                 {{ result.race_time.string }} 
                                             {% endif %}
