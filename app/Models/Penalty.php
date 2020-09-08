@@ -58,7 +58,9 @@ class Penalty extends Model
             14 => "This and previous lap invalidated",
             15 => "This and previous lap invalidated without reason",
             16 => "Ausgeschieden",
-            17 => "Black flag timer");
+            17 => "Black flag timer",
+            18 => "Zeitgutschrift"
+        );
         return $penalties[$this->penalty_type];
     }
 
@@ -115,7 +117,8 @@ class Penalty extends Model
             48 => "League grid penalty",
             49 => "Retry penalty",
             50 => "Illegal time gain",
-            51 => "Mandatory pitstop"
+            51 => "Mandatory pitstop",
+            52 => "Bug"
         );
         return $infringements[$this->infringement_type];
     }
