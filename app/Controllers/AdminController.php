@@ -75,7 +75,7 @@ class AdminController extends Controller
         $session = Session::find($args["session_id"]);
         
         # Find Driver
-        $driver = Driver::find($request->getParam('driver_id'))->first();
+        $driver = Driver::find($request->getParam('driver_id'));
 
         # Find Result
         $result = Result::fromDriver($driver->id)->fromSession($session->id)->first();
@@ -84,7 +84,7 @@ class AdminController extends Controller
 
             # Add Penalty to DB
             $penalty = new Penalty;
-            $penalty->driver_id = $request->getParam('driver_id');
+            $penalty->driver_id = $driver->id;
             $penalty->lap = $request->getParam('lap');
             $penalty->time = $request->getParam('time');
             $penalty->infringement_type = $request->getParam('infringement_id');
