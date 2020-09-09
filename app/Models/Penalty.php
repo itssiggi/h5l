@@ -46,7 +46,7 @@ class Penalty extends Model
             2 => "Gridstrafe",
             3 => "Penalty reminder",
             4 => "Zeitstrafe",
-            5 => "Warning",
+            5 => "Verwarnung",
             6 => "Disqualifiziert",
             7 => "Removed from formation lap",
             8 => "Parked too long timer",
@@ -66,8 +66,8 @@ class Penalty extends Model
 
     public function getinfringementStringAttribute() {
         $infringements = array(
-            0 => "Blocking by slow driving",
-            1 => "Blocking by wrong way driving",
+            0 => "Blockieren durch langsames Fahren",
+            1 => "Fahren in die falsche Richtung",
             2 => "Reversing off the start line",
             3 => "Schwere Kollision",
             4 => "Leichte Kollision",
@@ -84,7 +84,7 @@ class Penalty extends Model
             15 => "Drive through reminder serve within n laps",
             16 => "Drive through reminder serve this lap",
             17 => "Rasen in der Boxengasse",
-            18 => "Parked for too long",
+            18 => "Anhalten auf der Strecke",
             19 => "Ignoring tyre regulations",
             20 => "Zu viele Strafen",
             21 => "Mehrere Vergehen",
@@ -108,7 +108,7 @@ class Penalty extends Model
             39 => "Formation lap below allowed speed",
             40 => "Retired mechanical failure",
             41 => "Retired terminally damaged",
-            42 => "Safety car falling too far back",
+            42 => "Zu großer Abstand unter Safety car",
             43 => "Black flag timer",
             44 => "Nicht absolvierte Stop Go",
             45 => "Nicht absolvierte Drive-Through",
