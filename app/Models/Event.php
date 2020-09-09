@@ -57,6 +57,14 @@ class Event extends Model
         return $query->where('regular_event', 1);
     }
 
+    public function scopeFromDriver($query, $driver_id) {
+        return $query->whereHas('sessions', function($query) use ($driver_id) {
+            return $query->whereHas('results', function($query2) use ($driver_id) {
+                $query2->where('driver_id', $driver_id);
+            });
+        });
+    }
+
     public function scopeSeason($query, $season_id) {
         return $query->where('season_id', $season_id);
     }
