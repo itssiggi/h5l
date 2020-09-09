@@ -317,7 +317,9 @@
         </div>
         <div class="w-1/5 flex hidden lg:flex justify-center">
             {% if penalty.time > 0 %}
-            {{ penalty.time }} s
+              {{ penalty.time }} s
+            {% elseif penalty.time < 0 %}
+              - {{ penalty.time }} s
             {% else %}
             -
             {% endif %}
