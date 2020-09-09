@@ -12,7 +12,8 @@ use App\Models\{
     Driver,
     Team,
     Track,
-    Penalty
+    Penalty,
+    Season
 };
 
 use App\Transformers\{
@@ -51,6 +52,16 @@ class AdminController extends Controller
         GlobalController::recalculateStandings();
         $this->c->flash->addMessage('success', 'WM Stand erfolgreich neu berechnet.');
         return $response->withRedirect($this->c->router->pathFor('admin.index'));
+    }
+
+    public function getEditPenaltiesIndex($request, $response, $args) {
+        // Find all race sessions from the current season
+        $sessions = Session::fromSeason(Season::current()->id)->Race()->get();
+
+        // Find all events with results from this season
+        $events = Event::fromSeason(Season::current()->id)->whereHas('results')->orderBy('planned_start', 'DESC')->get();
+
+        return $this->c->view->render($response, 'admin/editPenaltiesIndex.twig', compact("sessions", "events"));
     }
 
     public function getEditPenalties($request, $response, $args) {

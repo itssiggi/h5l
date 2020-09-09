@@ -1,0 +1,40 @@
+{% extends 'app.twig' %}
+{% block head %}
+    <!-- <link href="{{ asset('auth.css', 'css') }}" rel="stylesheet"> -->
+{% endblock %}
+{% block content %}
+<div class="w-full max-w-3xl container mx-auto">
+    {% for event in events %}
+        <div class="mb-4 border-grey-200 rounded-lg border shadow-sm">
+          <div class="bg-gray-200 px-4 py-3 border-solid border-gray-300 border-b">
+            <b>{{ event.name }}</b> 
+          </div>
+          {% for session in sessions %}
+            {% if session.event_id == event.id and session.main_race == true %}
+              <div class="p-3 flex justify-between">
+                <div>Hauptrennen</div>
+                <div>
+                    <a class="text-center w-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded mt-5" href="{{ path_for('admin.editPenalties', { session_id: session.id }) }}">
+                        <button class="font-bold">
+                            Strafen bearbeiten
+                        </button>
+                    </a>
+                </div>
+              </div>
+            {% elseif session.event_id == event.id and session.sprint_race == true %}
+              <div class="p-3 flex justify-between">
+                <div>Sprintrennen</div>
+                <div>
+                    <a class="text-center w-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded mt-5" href="{{ path_for('admin.editPenalties', { session_id: session.id }) }}">
+                        <button class="font-bold">
+                            Strafen bearbeiten
+                        </button>
+                    </a>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
