@@ -63,6 +63,14 @@ class Session extends Model
         return $query->where('main_race', 1);
     }
 
+    public function scopeFromSeason($query, $season_id) {
+        return $query->whereHas('event', function($query) use ($season_id) {
+            return $query->whereHas('season', function($query2) use ($season_id) {
+                $query2->where('id', $season_id);
+            });
+        });
+    }
+
     public function scopeSprintRace($query) {
         return $query->where('sprint_race', 1);
     }

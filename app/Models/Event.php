@@ -53,6 +53,11 @@ class Event extends Model
         return $this->hasMany(Standing::class)->orderBy('points', 'DESC');
     }
 
+    public function results()
+    {
+        return $this->hasManyThrough(Result::class, Session::class);
+    }
+
     public function scopeOfficial($query) {
         return $query->where('regular_event', 1);
     }
@@ -65,7 +70,7 @@ class Event extends Model
         });
     }
 
-    public function scopeSeason($query, $season_id) {
+    public function scopeFromSeason($query, $season_id) {
         return $query->where('season_id', $season_id);
     }
 
