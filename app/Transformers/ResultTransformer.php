@@ -20,13 +20,14 @@ class ResultTransformer extends TransformerAbstract
         $best_lap_time = sprintf('%1d:%02d.%03d', $mins, $secs, $milliSecs);
 
         return [
-            'session_id' => $result->session_id,
+            'session' => $result->session,
             'driver' => $result->driver,
             'team' => $result->team,
             'position' => $result->position,
             'event' => $result->session->event,
             'grid' => $result->grid,
             'result_status' => $result->result_status,
+            'result_status_string' => $result->resultString,
             'positions_gained' => $result->grid - $result->position,
             'penalties' => $result->penalties,
             'fastest_lap' => $result->fastest_lap,

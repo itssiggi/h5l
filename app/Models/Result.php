@@ -114,6 +114,10 @@ class Result extends Model
         return $this->session->laps;
     }
 
+    public function getResultStringAttribute() {
+        return ["DNF", "DNF", "DNF", null, "DSQ", "DNF", "DNF", "DNF"][$this->result_status];
+    }
+
     public function getEventPointsAttribute() {
         $eventPoints = null;
         $results = Result::fromEvent($this->session->event->id)

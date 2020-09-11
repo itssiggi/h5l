@@ -1,7 +1,7 @@
 {% extends 'app.twig' %}
 {% block head %}
-    <link href="{{ asset('drivers_show.css', 'css') }}" rel="stylesheet">
-    <title>H5L - {{ driver.name }}</title>
+<link href="{{ asset('drivers_show.css', 'css') }}" rel="stylesheet">
+<title>H5L - {{ driver.name }}</title>
 {% endblock %}
 {% block content %}
 <div>
@@ -24,18 +24,18 @@
                 <div class="bottomLine mt-16 md:mt-20 w-full md:w-3/5 flex justify-between sm:px-12 md:p-0">
                     <div class="fact flex flex-col items-center">
                         <div class="factTitle text-lg">Platzierung</div>
-                            {% if driver.position %}
-                            <div class="factContent font-bold text-3xl"># {{ driver.position }}</div>
-                            {% else %}
-                                <div class="factContent font-bold text-3xl">-</div>
-                            {% endif %}
-                        </div>
+                        {% if driver.position %}
+                        <div class="factContent font-bold text-3xl"># {{ driver.position }}</div>
+                        {% else %}
+                        <div class="factContent font-bold text-3xl">-</div>
+                        {% endif %}
+                    </div>
                     <div class="fact flex flex-col items-center">
                         <div class="factTitle text-lg">Punkte</div>
                         {% if driver.position %}
                         <div class="factContent font-bold text-3xl">{{ driver.points }}</div>
                         {% else %}
-                            <div class="factContent font-bold text-3xl">-</div>
+                        <div class="factContent font-bold text-3xl">-</div>
                         {% endif %}
                     </div>
                 </div>
@@ -50,54 +50,86 @@
         </div>
         <div class="driverContent p-5 md:p-10 lg:p-20 bg-white shadow-2xl">
             <h2 class="race_results text-3xl font-bold mt-5 md:mt-0 mb-8 pb-3 pl-10 border-b-2 border-l-2 border-gray-300 rounded-bl-lg">Rennergebnisse</h2>
-              <div v-else class="bg-white my-6">
-                <table class="text-center w-full"> <!--Border collapse doesn't work on this site yet but it's available in newer tailwind versions -->
-                  <thead>
-                    <tr>
-                        <th class="py-4 px-6 font-bold uppercase text-sm">Rennen</th>
-                        <th class="py-4 px-6 font-bold uppercase text-sm hidden sm:table-cell">Datum</th>
-                        <th class="py-4 px-6 font-bold uppercase text-sm">Position</th>
-                        <th class="py-4 px-6 font-bold uppercase text-sm hidden sm:table-cell">Punkte</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% set lastResult = -99 %}
-                    {% for result in results %}
-                        {% if result.event.id != lastResult %}
-                        <tr class="hover:bg-gray-100 w-full">
-                            <td class="py-4 px-6"><a href="{{ path_for('events.show', {id: result.event.id}) }}"> {{ result.event.name }}</a></td>
-                            <td class="py-4 px-6 hidden sm:table-cell">{{ result.event.planned_start | date("d.m.Y") }}</td>
-                            {% if result.result_status %}
-                                {% if result.grid %}
-                                <td class="py-4 px-6">{{ result.position }} 
-                                    {% if result.positions_gained > 4 %}
-                                    <i class="ml-1 text-xs text-green-600 fa fa-angle-double-up" aria-hidden="true"></i> 
-                                    {% elseif result.positions_gained > 0 %}
-                                    <i class="ml-1 text-xs text-green-600 fa fa-angle-up" aria-hidden="true"></i>
-                                    {% elseif result.positions_gained < -4 %}
-                                    <i class="ml-1 text-xs text-red-600 fa fa-angle-double-down" aria-hidden="true"></i>
-                                    {% elseif result.positions_gained < 0 %}
-                                    <i class="ml-1 text-xs text-red-600 fa fa-angle-down" aria-hidden="true"></i>
-                                    {% elseif result.positions_gained == 0 %}
-                                    <i class="ml-1 text-xs text-gray-600 fa fa-angle-double-right" aria-hidden="true"></i>
-                                    {% endif %}
-                                    <span class="text-xs text-gray-600">{{ result.positions_gained | abs }}</span></td>
+            <div class="bg-white my-6">
+                <div class="text-center w-full table border-collapse ">
+                    <div class="table-row text-sm uppercase text-gray-500">
+                        <div class="py-4 px-6 font-bold uppercase text-sm">Rennen</div>
+                        <div class="py-4 px-6 font-bold uppercase text-sm hidden sm:table-cell">Datum</div>
+                        <div class="py-4 px-6 font-bold uppercase text-sm">Position</div>
+                        <div class="py-4 px-6 font-bold uppercase text-sm hidden sm:table-cell">Punkte</div>
+                    </div>
+                    {% for event in events %}
+                    <div class="table-row-group border-b border-gray-300 last:border-b-0 hover:bg-gray-100 w-full hover:text-blue-700">
+                        <div class="table-row font-bold">
+                            <div class="table-cell py-4 px-6">
+                                <a href="{{ path_for('events.show', {id: event.id}) }}"> 
+                                    {{ event.name }}
+                                </a>
+                            </div>
+                            <div class="table-cell py-4 px-6 hidden sm:table-cell">
+                                {{ event.planned_start | date("d.m.Y") }}
+                            </div>
+                            <div class="table-cell"></div>
+                            {% set eventPoints = 0 %}
+                            {% for result in results %}
+                            {% if result.event.id == event.id %}
+                            {% set eventPoints = result.eventPoints %}
+                            {% endif %}
+                            {% endfor %}
+                            <div class="table-cell py-4 px-6 ">
+                                {{ eventPoints }}
+                            </div>
+                        </div>
+                        {% for result in results %}
+                        {% if result.event.id == event.id %}
+                        <div class="table-row uppercase text-sm text-gray-600 hover:text-blue-600 hover:font-bold">
+                            <div class="table-cell">
+                                {% if result.session.main_race %}
+                                <a href="{{ path_for('sessions.show', {id: result.session.id}) }}"> 
+                                    <span>Hauptrennen</span>
+                                </a>
+                                {% elseif result.session.sprint_race %}
+                                <a href="{{ path_for('sessions.show', {id: result.session.id}) }}"> 
+                                    <span>Sprintrennen</span>
+                                </a>
+                                {% else %}
+                                <span>Rennen</span>
                                 {% endif %}
+                            </div>
+                            <div class="table-cell">
+                                <span class="text-sm">
+                                    {{ result.session.start | date('H:i') }} Uhr
+                                </span>
+                            </div>
+                            <div class="py-4 px-6 table-cell">
+                                {% if result.result_status %}
+                                {{ result.position }} 
+                                {% if result.positions_gained > 4 %}
+                                <i class="ml-1 text-xs text-green-600 fa fa-angle-double-up" aria-hidden="true"></i> 
+                                {% elseif result.positions_gained > 0 %}
+                                <i class="ml-1 text-xs text-green-600 fa fa-angle-up" aria-hidden="true"></i>
+                                {% elseif result.positions_gained < -4 %}
+                                <i class="ml-1 text-xs text-red-600 fa fa-angle-double-down" aria-hidden="true"></i>
+                                {% elseif result.positions_gained < 0 %}
+                                <i class="ml-1 text-xs text-red-600 fa fa-angle-down" aria-hidden="true"></i>
+                                {% elseif result.positions_gained == 0 %}
+                                <i class="ml-1 text-xs text-gray-600 fa fa-angle-double-right" aria-hidden="true"></i>
+                                {% endif %}
+                                <span class="text-xs text-gray-600">{{ result.positions_gained | abs }}</span>
+                                {% endif %}
+                            </div>
+                            {% if result.result_status == 3 %}
+                            <div class="py-4 px-6 table-cell">{{ result.points }}</div>
+                            {% else %}
+                            <div class="py-4 px-6 table-cell">{{ result.result_status_string }}</div>
                             {% endif %}
-                            {% if result.result_status == 4 %}
-                            <td class="text-gray-600 py-4 px-6 ">DSQ</td>
-                            {% elseif result.result_status == 6 %}
-                            <td class="text-gray-600 py-4 px-6 ">DNF</td>
-                            {% elseif result.result_status == 3 %}
-                            <td class="py-4 px-6 hidden sm:table-cell">{{ result.eventPoints }}</td>
+                        </div>
                             {% endif %}
-                        </tr>
-                        {% set lastResult = result.event.id %}
-                        {% endif %}
+                        {% endfor %}
+                    </div>
                     {% endfor %}
-                  </tbody>
-                </table>
-              </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

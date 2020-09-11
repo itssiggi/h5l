@@ -14,10 +14,13 @@ use League\Fractal\{
     Resource\Item,
     Resource\Collection
 };
-use App\Transformers\DriverTransformer;
-use App\Transformers\ResultTransformer;
-use App\Transformers\TeamTransformer;
-use App\Transformers\SessionTransformer;
+use App\Transformers\{
+    DriverTransformer,
+    ResultTransformer,
+    TeamTransformer,
+    SessionTransformer,
+    EventTransformer
+};
 
 /**
  * DriverController
@@ -34,17 +37,18 @@ class DriverController extends Controller
 
     public function show($requst, $response, $args) {
         $driver = Driver::where('short_name', $args['name'])->first();
-        $events = Event::fromDriver($driver->id)->get();
+        $events = Event::fromDriver($driver->id)->orderBy('planned_start', 'DESC')->get();
 
         if ($driver === null) {
             return $response->withStatus(500);
         }
 
-        $results = Result::fromDriver($driver->id)->isMainRace()->isOfficial()->get()->sortByDesc(function($query){
+        $results = Result::fromDriver($driver->id)->isRace()->isOfficial()->get()->sortByDesc(function($query){
                return $query->session->start;
             });
 
         $driverTransformer = new Item($driver, new DriverTransformer);
+        $eventTransformer = new Collection($events, new EventTransformer);
         $data = [
             "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"]
         ];
@@ -55,7 +59,8 @@ class DriverController extends Controller
             $data = [
                 "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"],
                 "team" => $this->c->fractal->createData($teamTransformer)->toArray()["data"],
-                "results" => $this->c->fractal->createData($resultTransformer)->toArray()["data"]
+                "results" => $this->c->fractal->createData($resultTransformer)->toArray()["data"],
+                "events" => $this->c->fractal->createData($eventTransformer)->toArray()["data"]
             ];
         } else {
             $data = [
