@@ -27,12 +27,20 @@ use App\Transformers\{
  */
 class DriverController extends Controller
 {
-    public function index($requst, $response) {
+    public function index($requst, $response, $api = false) {
         $drivers = Driver::all();
 
         $transformer = new Collection($drivers, new DriverTransformer);
 
+        if ($api) {
+            return $response->withJson($this->c->fractal->createData($transformer)->toArray()["data"]);
+        }
+
         return $response->withJson($this->c->fractal->createData($transformer)->toArray());
+    }
+
+    public function apiIndex($request, $response) {
+        return $this->index($request, $response, $api = true);
     }
 
     public function show($requst, $response, $args) {
@@ -67,8 +75,7 @@ class DriverController extends Controller
                 "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"]
             ];
         }
-    
-        # return $response->withJson($data);
+
         return $this->c->view->render($response, 'drivers/show.twig', $data);
     }
 

@@ -15,7 +15,7 @@ use App\Middleware\AuthMiddleware;
 
 $app->group('/api', function () {
     $this->get('/standings', SeasonController::class . ':apiCurrentStandings');
-    $this->get('/drivers', DriverController::class . ':apiAllDrivers');
+    $this->get('/drivers', DriverController::class . ':apiIndex');
 });
 
 ?>
