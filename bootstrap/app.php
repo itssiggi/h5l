@@ -103,4 +103,5 @@ $app->add(new CsrfViewMiddleware($container));
 $app->add($container->csrf);
 
 require_once __DIR__ . '/../routes/web.php';
+require_once __DIR__ . '/../routes/api.php';
 

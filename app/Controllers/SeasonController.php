@@ -43,7 +43,11 @@ class SeasonController extends Controller
         return $response->withJson($racer);
     }
 
-    public function currentStandings($request, $response, $args)
+    public function apiCurrentStandings($request, $response, $args) {
+        return $this->currentStandings($request, $response, $args, $api = true);
+    }
+
+    public function currentStandings($request, $response, $args, $api = Null)
     {
         $currentSeason = Season::orderBy('id', 'DESC')->first();
         $events = Event::orderBy('planned_start', 'DESC')->where('planned_start', '<', new DateTime(date()))->where('season_id', $currentSeason->id)->where('regular_event', 1)->get();
@@ -63,6 +67,10 @@ class SeasonController extends Controller
 
         $transformer = new Collection($standings, new StandingTransformer);
         $standings = $this->c->fractal->createData($transformer)->toArray()["data"];
+
+        if ($api) {
+            return $response->withJson($standings);
+        }
 
         return $this->c->view->render($response, 'standings/index.twig', compact("standings", "teams"));
     }
