@@ -38,6 +38,14 @@
                         <div class="factContent font-bold text-3xl">-</div>
                         {% endif %}
                     </div>
+                    <div class="fact flex flex-col items-center">
+                        <div class="factTitle text-lg">PpE</div>
+                        {% if driver.position %}
+                        <div class="factContent font-bold text-3xl">{{ driver.pointsPerEvent }}</div>
+                        {% else %}
+                        <div class="factContent font-bold text-3xl">-</div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="w-2/5 hidden lg:block self-center">

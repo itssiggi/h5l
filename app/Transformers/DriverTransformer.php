@@ -24,6 +24,7 @@ class DriverTransformer extends TransformerAbstract
             'points' => $driver->points,
             'position' => $driver->position,
             'carNumber' => (CarNumber::where('driver_id', $driver->id)->first())->id,
+            'pointsPerEvent' => $driver->pointsPerEvent
             # 'fastest_laps' => $this->calculateFastestLaps($driver)
         ];
     }

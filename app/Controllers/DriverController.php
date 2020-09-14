@@ -57,9 +57,6 @@ class DriverController extends Controller
 
         $driverTransformer = new Item($driver, new DriverTransformer);
         $eventTransformer = new Collection($events, new EventTransformer);
-        $data = [
-            "driver" => $this->c->fractal->createData($driverTransformer)->toArray()["data"]
-        ];
 
         if (!$results->isEmpty()) {
             $resultTransformer = new Collection($results, new ResultTransformer);

@@ -4,8 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Team;
-use App\Models\Result;
+use App\Models\{
+    Team,
+    Event,
+    Result,
+    Season
+};
 
 /**
  * Driver Modell
@@ -13,7 +17,6 @@ use App\Models\Result;
 class Driver extends Model
 {
     protected $table = 'drivers';
-    protected $points = null;
 
     protected $fillable = [
         'name',
@@ -49,5 +52,14 @@ class Driver extends Model
         $standings = Standing::join('events', 'standings.event_id', '=', 'events.id')->where('driver_id', $this->id)->orderBy('events.planned_start', 'Desc')->first();
 
         return $standings->position;
+    }
+
+    public function getEventParticipationsAttribute() {
+        $events = Event::fromDriver($this->id)->fromSeason(Season::current()->id)->Official()->get();
+        return $events->count();
+    }
+
+    public function getPointsPerEventAttribute() {
+        return round($this->points / $this->eventParticipations, 1);
     }
 }
