@@ -7,7 +7,7 @@
     <title>H5L - Sprintrennen - {{ session.event.name }}</title>
 {% endif %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 {% endblock %} 
 {% block content %}
 <div class="container mx-auto mb-10">
@@ -232,7 +232,7 @@
       <a id="laptimes"></a>
   </div>
   <div class="w-full h-100 mb-10 hidden md:flex">
-    <canvas id="laptimeChart" class="w-full h-100 mb-10"></canvas>
+    <div id="laptimesChart" class="w-full"></div>
   </div>
 </div>
 <div>
@@ -401,43 +401,66 @@
 {% endblock %}
 {% block script %}
 <script>
-const times = ["1:32.599", "1:32.300", "1:31.000"];
-var ctx = document.getElementById("laptimeChart").getContext('2d');
-Chart.Legend.prototype.afterFit = function() {
-    this.height = this.height + 50;
-};
-var myChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: Array.from(Array({{ chartInfo.laps | raw }}), (_, i) => i + 1),
-    datasets: {{ chartData | json_encode | raw }}
-  },
-  options: {
-    scales: {
-        gridLines: {
-            display: false
-        },
-      yAxes: [{
-        type: 'time',
-        time: {
-          parser: 'm:s.SSS',
-          unit: 'seconds',
-          unitStepSize: 2,
-
-          displayFormats: {
-            'seconds': 'm:s.000'
-          }
-        },
-        ticks: {
-            min: '{{ chartInfo.min}}',
-            max: '{{ chartInfo.max }}',
-            padding: 25,
-        }
-      }]
+    dataIn = {{ chartData | json_encode | raw }};
+    var data = []
+    for (var i = dataIn.length - 1; i >= 0; i--) {
+        laps = Array.from(Array({{ chartInfo.laps | raw }}), (_, i) => i + 1);
+        var temp = {
+            x: laps,
+            y: dataIn[i].data,
+            visible: dataIn[i].visible,
+            type: 'scatter',
+            mode: 'lines+markers',
+            line: {color: dataIn[i].borderColor},
+            name: dataIn[i].label
+        };
+        data.push(temp)
     }
-  }
-});
 
+    var org_locale = Plotly.d3.locale;
+    Plotly.d3.locale = (locale) => {
+      var result = org_locale(locale);
+      var org_number_format = result.numberFormat;
+      result.numberFormat = (format) => {
+        return (x) => {
+            minutes = parseInt(x / 60).toString()
+            seconds = parseInt(x % 60).toString().padStart(2, 0)
+            ms = (parseInt((x % 1) * 1000)).toString().padStart(3, 0)
+            console.log(x)
+            console.log(ms)
+            stringTime = minutes + ":" + seconds + "." + ms
+            return stringTime;
+        }
+      }
+      return result;
+    }
+
+    console.log(data)
+
+    CHART = document.getElementById('laptimesChart');
+
+    var layout = {
+        scrollZoom: true,
+        xaxis: {
+            tickmode: "linear",
+            range: [1,laps.length]
+        },
+        yaxis: {
+            tickformat: 'laptimeString'
+        },
+        legend: {
+            "orientation": "h",
+            "x": 0.5,
+            "y": 1.3,
+            "yanchor": "auto",
+            "xanchor": "center"
+        }
+    };
+
+    var config = {
+      displayModeBar: false
+    };
+    Plotly.newPlot(CHART, data, layout, config);
 </script>
 <script>
     var elements  = document.getElementsByClassName('resultRow');

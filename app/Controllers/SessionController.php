@@ -50,13 +50,13 @@ class SessionController extends Controller
             foreach ($drivers as $driver) {
                 $label = $driver->name;
                 $data = array();
-                $hidden = true;
+                $visible = "legendonly";
 
                 foreach ($laptimes as $laptime) {
                     if ($driver->id == $laptime->driver_id) {
-                        array_push($data, $laptime->timeAsString);
+                        array_push($data, floatval($laptime->time));
                         if ($min == $laptime or $laptimes[6] == $laptime) {
-                            $hidden = false;
+                            $visible = true;
                         }
                     }
                 }
@@ -64,7 +64,7 @@ class SessionController extends Controller
                     'label' => $driver->name,
                     'fill' => false,
                     'data' => $data,
-                    'hidden' => $hidden,
+                    'visible' => $visible,
                     'borderColor' => $driver->team->color
                 );
 
