@@ -31,4 +31,8 @@ class SafetyCarPhase extends Model
             });
         });
     }
+
+    public function scopeFromSession($query, $session_id) {
+        return $query->where('session_id', $session_id);
+    }
 }
