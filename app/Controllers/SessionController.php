@@ -6,7 +6,8 @@ use App\Models\{
     Session,
     Result,
     Driver,
-    Laptime
+    Laptime,
+    SafetyCarPhase
 };
 use App\Transformers\{
     SessionTransformer,
@@ -29,6 +30,7 @@ class SessionController extends Controller
 
         $session = Session::find($args["id"]);
         $drivers = Driver::fromSession($session->id)->orderBy('team_id', 'ASC')->get();
+        $scPhases = SafetyCarPhase::fromSession($session->id)->get();
 
         if ($session) {
             $type = $session->type;
@@ -96,7 +98,7 @@ class SessionController extends Controller
             } elseif ($type == 8) {
                 $template = "short_quali";
             }
-            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results", "grid", "laptimes", "penalties", "chartData", "chartInfo"));
+            return $this->c->view->render($response, 'sessions/' . $template . '.twig', compact("session", "results", "grid", "laptimes", "penalties", "chartData", "chartInfo", "scPhases"));
         } else {
             return $response->withRedirect($this->c->router->pathFor('events.index'));
         }

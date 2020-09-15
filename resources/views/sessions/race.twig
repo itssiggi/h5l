@@ -401,10 +401,30 @@
 {% endblock %}
 {% block script %}
 <script>
-    dataIn = {{ chartData | json_encode | raw }};
-    var data = []
+    var dataIn = {{ chartData | json_encode | raw }};
+    var sc = {{ scPhases | json_encode | raw }};
+    var data = [];
+    var scShapes = [];
+    for (var i = sc.length - 1; i >= 0; i--) {
+        var temp = 
+        {
+            type: 'rect',
+            xref: 'x',
+            yref: 'paper',
+            x0: sc[i].begin,
+            y0: 0,
+            x1: sc[i].end,
+            y1: 1,
+            fillcolor: "#fcba03",
+            opacity: 0.2,
+            line: {
+                width: 0
+            }
+        };
+        scShapes.push(temp)
+    }
     for (var i = dataIn.length - 1; i >= 0; i--) {
-        laps = Array.from(Array({{ chartInfo.laps | raw }}), (_, i) => i + 1);
+        var laps = Array.from(Array({{ chartInfo.laps | raw }}), (_, i) => i + 1);
         var temp = {
             x: laps,
             y: dataIn[i].data,
@@ -415,7 +435,7 @@
             name: dataIn[i].label
         };
         data.push(temp)
-    }
+    };
 
     var org_locale = Plotly.d3.locale;
     Plotly.d3.locale = (locale) => {
@@ -426,22 +446,21 @@
             minutes = parseInt(x / 60).toString()
             seconds = parseInt(x % 60).toString().padStart(2, 0)
             ms = (parseInt((x % 1) * 1000)).toString().padStart(3, 0)
-            console.log(x)
-            console.log(ms)
             stringTime = minutes + ":" + seconds + "." + ms
             return stringTime;
         }
       }
       return result;
-    }
-
-    console.log(data)
+    };
 
     CHART = document.getElementById('laptimesChart');
 
     var layout = {
+        automargin: false,
+        shapes: scShapes,
         scrollZoom: true,
         xaxis: {
+            title: 'Runden',
             tickmode: "linear",
             range: [1,laps.length]
         },
