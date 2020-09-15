@@ -99,6 +99,11 @@ class Event extends Model
         return 0;
     }
 
+    public function getAmountRacesAttribute() {
+        $session = Session::fromEvent($this->id)->Race()->get();
+        return $session->count();
+    }
+
     public function getSprintRaceAttribute() {
         $session = Session::fromEvent($this->id)->sprintRace()->first();
         if ($session) {

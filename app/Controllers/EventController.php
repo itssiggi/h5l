@@ -56,7 +56,7 @@ class EventController extends Controller
 
         $sessions = $event->sessions;
 
-        if ($sessions->count() == 3) {
+        if ($event->amountRaces == 2) {
             $standings = $event->standings;
 
             foreach ($sessions as $session) {
@@ -93,7 +93,7 @@ class EventController extends Controller
             ];
 
             return $this->c->view->render($response, 'events/show_race_race_quali.twig', $data);
-        } elseif ($sessions->count() == 2) {
+        } elseif ($event->amountRaces == 1) {
             $standings = $event->standings;
 
             foreach ($sessions as $session) {
