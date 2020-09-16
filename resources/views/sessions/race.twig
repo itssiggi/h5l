@@ -404,25 +404,50 @@
     var dataIn = {{ chartData | json_encode | raw }};
     var sc = {{ scPhases | json_encode | raw }};
     var data = [];
+    var annotations = [];
     var scShapes = [];
     for (var i = sc.length - 1; i >= 0; i--) {
-        var temp = 
-        {
-            type: 'rect',
-            xref: 'x',
-            yref: 'paper',
-            x0: sc[i].begin,
-            y0: 0,
-            x1: sc[i].end,
-            y1: 1,
-            fillcolor: "#fcba03",
-            opacity: 0.2,
-            line: {
-                width: 0
+            if (sc[i].end - sc[i].begin > 0) {
+            var temp = 
+            {
+                type: 'rect',
+                xref: 'x',
+                yref: 'paper',
+                x0: sc[i].begin,
+                y0: 0,
+                x1: sc[i].end,
+                y1: 1,
+                fillcolor: "#fcba03",
+                opacity: 0.2,
+                line: {
+                    width: 0
+                }
+            };
+            scShapes.push(temp)
+
+            if (sc[i].virtualSC) {
+                var text = "VSC"
+            } else {
+                var text = "SC"
             }
-        };
-        scShapes.push(temp)
+            var temp = {
+                xref: 'x',
+                yref: 'paper',
+                x: (sc[i].begin + sc[i].end) / 2,
+                y: 0.15,
+                text: text,
+                font: {
+                  color: "gray",
+                  size: 14,
+                },
+                opacity: .65,
+                showarrow: false
+            };
+            annotations.push(temp)
+        }
     }
+
+
     for (var i = dataIn.length - 1; i >= 0; i--) {
         var laps = Array.from(Array({{ chartInfo.laps | raw }}), (_, i) => i + 1);
         var temp = {
@@ -458,6 +483,7 @@
     var layout = {
         automargin: false,
         shapes: scShapes,
+        annotations: annotations,
         scrollZoom: true,
         xaxis: {
             title: 'Runden',
