@@ -51,6 +51,9 @@ class SeasonController extends Controller
     {
         $currentSeason = Season::orderBy('id', 'DESC')->first();
         $events = Event::orderBy('planned_start', 'DESC')->where('planned_start', '<', new DateTime(date()))->where('season_id', $currentSeason->id)->where('regular_event', 1)->get();
+        $drivers = Driver::all();
+        $positions = Standing::toEvent($events[0]->id)->get();
+
         foreach ($events as $event) {
             $standings = Standing::where('event_id', $event->id)->orderBy('points', 'DESC')->get();
             if ($standings) {
@@ -66,13 +69,15 @@ class SeasonController extends Controller
         $teams = $this->c->fractal->createData($teamTransformer)->toArray()["data"];
 
         $transformer = new Collection($standings, new StandingTransformer);
+        $positionTransformer = new Collection($positions, new StandingTransformer);
         $standings = $this->c->fractal->createData($transformer)->toArray()["data"];
+        $positions = $this->c->fractal->createData($positionTransformer)->toArray()["data"];
 
         if ($api) {
             return $response->withJson($standings);
         }
 
-        return $this->c->view->render($response, 'standings/index.twig', compact("standings", "teams"));
+        return $this->c->view->render($response, 'standings/index.twig', compact("standings", "teams", "positions", "events", "drivers"));
     }
 
     public function getRules($request, $response, $args) {

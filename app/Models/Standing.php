@@ -34,6 +34,13 @@ class Standing extends Model
         return $query->where('event_id', $event_id);
     }
 
+    public function scopeToEvent($query, $event_id) {
+        $event = Event::find($event_id);
+        return $query->whereHas('event', function($query) use ($event) {
+            $query->where('planned_start', '<=', $event->planned_start);
+        });
+    }
+
     public function scopeFromSeason($query, $season_id) {
         return $query->where('season_id', $season_id);
     }
