@@ -20,7 +20,6 @@ class SessionTransformer extends TransformerAbstract
             'mainRace' => $session->main_race,
             'sprintRace' => $session->sprint_race,
             'type' => $session->type,
-            'track' => $session->track,
             'track_temp' => $session->track_temp,
             'air_temp' => $session->air_temp,
             'formula' => $session->air_temp,
