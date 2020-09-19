@@ -125,6 +125,36 @@ class EventController extends Controller
             ];
 
             return $this->c->view->render($response, 'events/show_race_quali.twig', $data);
+        } elseif ($event->amountRaces > 2) {
+
+            $sessionData = [];
+
+            foreach ($sessions as $session) {
+                if ($session->isRace) {
+                    $sessionTransformer = new Item($session, new SessionTransformer);
+                    $resultTransformer = new Collection($session->results, new ResultTransformer);
+
+                    array_push($sessionData, 
+                        [
+                            "info" => $this->c->fractal->createData($sessionTransformer)->toArray()["data"],
+                            "results" => $this->c->fractal->createData($resultTransformer)->toArray()["data"]
+                        ]
+                    );  
+                }
+            }
+
+            $standings = $event->standings;
+
+            $eventTransformer = new Item($event, new EventTransformer);
+            $standingsTransformer = new Collection($standings, new StandingTransformer);
+
+            $data = [
+                "event" => $this->c->fractal->createData($eventTransformer)->toArray()["data"],
+                "sessions" => $sessionData,
+                "standings" => $this->c->fractal->createData($standingsTransformer)->toArray()["data"]
+            ];
+
+            return $this->c->view->render($response, 'events/show_multi_races.twig', $data);
         }
          else {
             return $this->c->view->render($response, 'events/show_no_results.twig', compact("event"));
