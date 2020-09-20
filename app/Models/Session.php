@@ -121,9 +121,9 @@ class Session extends Model
 
     public function getTyresAttribute() {
         $tyres = array(
-            $this->event->track->tyre_soft => 0,
-            $this->event->track->tyre_medium => 1,
-            $this->event->track->tyre_hard => 2,
+            $this->track->tyre_soft => 0,
+            $this->track->tyre_medium => 1,
+            $this->track->tyre_hard => 2,
             7 => 7,
             8 => 8
         );
