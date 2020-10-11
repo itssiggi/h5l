@@ -60,6 +60,11 @@ class Driver extends Model
     }
 
     public function getPointsPerEventAttribute() {
-        return round($this->points / $this->eventParticipations, 1);
+        if ($this->eventParticipations) {
+            return round($this->points / $this->eventParticipations, 1);
+        } else  {
+            return 0;
+        }
+        
     }
 }
