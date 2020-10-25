@@ -56,7 +56,7 @@ class EventController extends Controller
 
         $sessions = $event->sessions;
 
-        if ($event->amountRaces == 2) {
+        if ($event->amountRaces == 2 and $event->amountQuali == 1) {
             $standings = $event->standings;
 
             foreach ($sessions as $session) {
@@ -93,7 +93,41 @@ class EventController extends Controller
             ];
 
             return $this->c->view->render($response, 'events/show_race_race_quali.twig', $data);
-        } elseif ($event->amountRaces == 1) {
+        } elseif ($event->amountRaces == 2 and $event->amountQuali == 0) {
+            $standings = $event->standings;
+
+            foreach ($sessions as $session) {
+                if ($session->isRace) {
+                    if ($session->isMainRace) {
+                        $mainRaceResultsTransformer = new Collection($session->results, new ResultTransformer);
+                        $mainRaceTransformer = new Item($session, new SessionTransformer);
+                    } elseif ($session->isSprintRace) {
+                        $sprintRaceResultsTransformer = new Collection($session->results, new ResultTransformer);
+                        $sprintRaceTransformer = new Item($session, new SessionTransformer);
+                    }
+                }
+            }
+
+            $eventTransformer = new Item($event, new EventTransformer);
+            $standingsTransformer = new Collection($standings, new StandingTransformer);
+            
+            $data = [
+                "event" => $this->c->fractal->createData($eventTransformer)->toArray()["data"],
+                "sessions" => [
+                    "mainRace" => $this->c->fractal->createData($mainRaceTransformer)->toArray()["data"],
+                    "sprintRace" => $this->c->fractal->createData($sprintRaceTransformer)->toArray()["data"],
+                ],
+                "results" => [
+                    "mainRace" => $this->c->fractal->createData($mainRaceResultsTransformer)->toArray()["data"],
+                    "sprintRace" => $this->c->fractal->createData($sprintRaceResultsTransformer)->toArray()["data"]
+                ],
+                "standings" => $this->c->fractal->createData($standingsTransformer)->toArray()["data"]
+            ];
+
+            return $this->c->view->render($response, 'events/show_race_race.twig', $data);
+        }
+
+        elseif ($event->amountRaces == 1) {
             $standings = $event->standings;
 
             foreach ($sessions as $session) {

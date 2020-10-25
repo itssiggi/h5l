@@ -104,6 +104,11 @@ class Event extends Model
         return $session->count();
     }
 
+    public function getAmountQualiAttribute() {
+        $session = Session::fromEvent($this->id)->Quali()->get();
+        return $session->count();
+    }
+
     public function getSprintRaceAttribute() {
         $session = Session::fromEvent($this->id)->sprintRace()->first();
         if ($session) {
