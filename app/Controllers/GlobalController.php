@@ -127,4 +127,7 @@ class GlobalController extends Controller
             }
         }
     }
+    public function getImprint($requst, $response, $args) {
+        return $this->c->view->render($response, 'other/imprint.twig');
+    }
 }

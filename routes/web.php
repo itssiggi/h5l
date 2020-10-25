@@ -8,6 +8,7 @@ use App\Controllers\ {
     TeamController,
     SessionController,
     AdminController,
+    GlobalController,
     Auth\AuthController
 };
 
@@ -18,6 +19,7 @@ $app->get('', EventController::class . ':index')->setName('index');
 
 $app->get('/standings', SeasonController::class . ':currentStandings')->setName('standings.index');
 $app->get('/rules', SeasonController::class . ':getRules')->setName('rules');
+$app->get('/imprint', GlobalController::class . ':getImprint')->setName('imprint');
 
 $app->group('/events', function () {
     $this->get('', EventController::class . ':index')->setName('events.index');
