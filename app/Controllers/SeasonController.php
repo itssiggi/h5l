@@ -136,4 +136,28 @@ class SeasonController extends Controller
 
         return $response->withJson($this->c->fractal->createData($transformer)->toArray());
     }
+
+    public function apiGetSeasons($request, $response, $args) {
+        $seasons = Season::all();
+
+        if ($seasons === null) {
+            return $response->withStatus(404);
+        }
+
+        return $response
+            ->withJson($seasons)
+            ->withStatus(200);
+    }
+
+    public function apiGetSeason($request, $response, $args) {
+        $season = Season::find($args['id']);
+
+        if ($season === null) {
+            return $response->withStatus(404);
+        }
+
+        return $response
+            ->withJson($season)
+            ->withStatus(200);
+    }
 }

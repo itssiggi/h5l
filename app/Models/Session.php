@@ -16,7 +16,7 @@ use App\Models\{
 };
 
 /**
- * Session Modell
+ * Session Model
  */
 class Session extends Model
 {
@@ -59,6 +59,14 @@ class Session extends Model
         return $this->hasMany(Result::class)->orderBy('position', 'ASC');
     }
 
+    public function phases() {
+        return $this->hasMany(SafetyCarPhase::class);
+    }
+
+    public function weatherData() {
+        return $this->hasMany(Weather::class);
+    }
+
     public function scopeMainRace($query) {
         return $query->where('main_race', 1);
     }
@@ -85,11 +93,6 @@ class Session extends Model
 
     public function scopeFromEvent($query, $event_id) {
         return $query->where('event_id', $event_id);
-    }
-
-    public function getWeatherDataAttribute() {
-        $weather = Weather::where('session_id', $this->id)->get();
-        return $weather;
     }
 
     public function getWinnerAttribute() {

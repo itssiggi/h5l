@@ -19,10 +19,11 @@ class StandingTransformer extends TransformerAbstract
             'position' => $standing->position,
             'wins' => $standing->wins,
             'points' => $standing->points,
-            'driver' => $standing->driver,
-            'team' => $standing->driver->team,
-            'event' => $standing->event
+            'event' => $standing->event->id,
+            'pointsPerEvent' => $standing->driver->pointsPerEvent
         ];
     }
+
+
 
 }

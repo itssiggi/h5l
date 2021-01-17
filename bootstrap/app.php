@@ -1,4 +1,6 @@
 <?php
+error_reporting(1);
+
 
 use \App\Middleware\Cors;
 use \App\Middleware\ValidationErrorsMiddleware;
@@ -18,6 +20,7 @@ try {
 }
 
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/constants.php';
 
 $app = new Slim\App([
     'settings' => [
@@ -38,7 +41,7 @@ $app = new Slim\App([
 $container = $app->getContainer();
 $container["session"] = session_start();
 
-# $app->add(new Cors($container));
+$app->add(new Cors($container));
 # $app->add(new SessionMiddleware($container));
 
 
@@ -98,9 +101,9 @@ $container['csrf'] = function ($container) {
 
 $app->add(new ValidationErrorsMiddleware($container));
 $app->add(new OldInputMiddleware($container));
-$app->add(new CsrfViewMiddleware($container));
+// $app->add(new CsrfViewMiddleware($container));
 
-$app->add($container->csrf);
+// $app->add($container->csrf);
 
 require_once __DIR__ . '/../routes/web.php';
 require_once __DIR__ . '/../routes/api.php';

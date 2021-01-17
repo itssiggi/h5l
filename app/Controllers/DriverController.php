@@ -22,6 +22,8 @@ use App\Transformers\{
     EventTransformer
 };
 
+use \Illuminate\Database\QueryException;
+
 /**
  * DriverController
  */
@@ -39,8 +41,88 @@ class DriverController extends Controller
         return $response->withJson($this->c->fractal->createData($transformer)->toArray());
     }
 
-    public function apiIndex($request, $response) {
-        return $this->index($request, $response, $api = true);
+    public function apiCreateDriver($request, $response) {
+        $driver = new Driver;
+
+        $driver->name = $request->getParam("name");
+        $driver->team_id = $request->getParam("team_id");
+        $driver->short_name = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $request->getParam("name")), '-'));
+
+        try {
+            $driver->save();
+        } catch (QueryException $ex) {
+            return $response->withStatus(400);
+        }
+
+        return $response
+            ->withJson($driver)
+            ->withStatus(201);
+    }
+
+    public function apiGetDriver($request, $response, $args) {
+        if (is_numeric($args['id'])) {
+            $driver = Driver::find($args['id']);
+        } else {
+            $driver = Driver::where('name', $args['id'])->first();
+        }
+
+        if ($driver === null) {
+            return $response->withStatus(404);
+        } else {
+            $transformer = new Item($driver, new DriverTransformer());
+            $driver = $this->c->fractal
+                ->parseIncludes((!is_null($request->getParam('include'))) ? $request->getParam('include') : [])
+                ->createData($transformer)
+                ->toArray()["data"];
+
+            return $response
+                ->withJson($driver)
+                ->withStatus(200);
+        }   
+    }
+
+    public function apiGetDrivers($request, $response) {
+        $drivers = Driver::all();
+
+        if ($drivers === null) {
+            return $response->withStatus(404);
+        } else {
+            return $response
+                ->withJson($drivers)
+                ->withStatus(200);
+        }   
+    }
+
+    public function apiDeleteDriver($request, $response) {
+        if (is_numeric($request->getParam("id"))) {
+            $driver = Driver::find($request->getParam("id"));
+        } else {
+            $driver = Driver::where('name', $request->getParam("id"))->first();
+        }
+
+        if ($driver === null) {
+            return $response->withStatus(500);
+        } else {
+            $driver->delete();
+            return $response->withStatus(204);
+        }   
+    }
+
+    public function apiUpdateDriver($request, $response, $args) {
+        $driver = Driver::find($args['id']);
+
+        if ($driver === null) {
+            return $response->withStatus(400);
+        } else {
+            $driver->name = (string) $request->getParam("name");
+            $driver->team_id = (int) $request->getParam("team_id");
+            $driver->short_name = (string) strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $driver->name), '-'));
+        }
+
+        $driver->save;
+        return $response
+            ->withJson($driver)
+            ->withStatus(200);
     }
 
     public function show($requst, $response, $args) {
@@ -74,18 +156,6 @@ class DriverController extends Controller
         }
 
         return $this->c->view->render($response, 'drivers/show.twig', $data);
-    }
-
-    public function add($request, $response) {
-        $driver = new Driver;
-
-        $driver->name = $request->getParam("name");
-        $driver->team_id = $request->getParam("team_id");
-        $driver->short_name = $request->getParam("short_name");
-
-        $driver->save();
-
-        return $response->withJson($driver);
     }
 
     public function update($request, $response, $args) {

@@ -300,4 +300,24 @@ class EventController extends Controller
 
         return $this->c->view->render($response, 'setups/show.twig', compact("data"));
     }
+
+    public function apiGetEvent($request, $response, $args) {
+        if (is_numeric($args['id'])) {
+            $event = Event::find($args['id']);
+        }
+
+        if ($event === null) {
+            return $response->withStatus(404);
+        } else {
+            $transformer = new Item($event, new EventTransformer);
+            $event = $this->c->fractal
+                ->parseIncludes((!is_null($request->getParam('include'))) ? $request->getParam('include') : [])
+                ->createData($transformer)
+                ->toArray()["data"];
+
+            return $response
+                ->withJson($event)
+                ->withStatus(200);
+        } 
+    }
 }

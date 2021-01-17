@@ -8,7 +8,9 @@ use App\Models\{
     Team,
     Event,
     Result,
-    Season
+    Season,
+    CarNumber,
+    Standing
 };
 
 /**
@@ -39,6 +41,14 @@ class Driver extends Model
         return $this->hasMany(Result::class)->orderBy('session_id', 'DESC');
     }
 
+    public function standings () {
+        return $this->hasMany(Standing::class)->orderBy('id', 'DESC');
+    }
+
+    public function carNumber () {
+        return $this->belongsTo(CarNumber::class);
+    }
+
     public function scopeFromSession($query, $session_id) {
         return $query->whereHas('results', function($query) use ($session_id) {
             return $query->whereHas('session', function($query2) use ($session_id) {
@@ -65,6 +75,5 @@ class Driver extends Model
         } else  {
             return 0;
         }
-        
     }
 }

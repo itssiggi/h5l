@@ -3,12 +3,12 @@
 namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
-use App\Models\SafetyCarPhase;
+use App\Models\Weather;
 
 /**
- * SafetyCarPhaseTransformer
+ * Weather Transformer
  */
-class SafetyCarPhaseTransformer extends TransformerAbstract
+class WeatherTransformer extends TransformerAbstract
 {
    /**
      * List of resources to automatically include
@@ -16,7 +16,6 @@ class SafetyCarPhaseTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-
     ];
 
     /**
@@ -28,18 +27,18 @@ class SafetyCarPhaseTransformer extends TransformerAbstract
         'session'
     ];
 
-    public function transform (SafetyCarPhase $safetyCarPhase) {
+    public function transform (Weather $weather) {
         return [
-            'start' => (int) $safetyCarPhase->start,
-            'end' => (int) $safetyCarPhase->end,
-            'isVirtual' => (boolean) $safetyCarPhase->virtualSC
+            'type' => $weather->type,
+            'air_temp' => $weather->air_temp,
+            'track_temp' => $weather->track_temp,
+            'lap' => $weather->lap
         ];
     }
 
-    public function includeSession (SafetyCarPhase $safetyCarPhase) {
-        $session = $safetyCarPhase->session;
+    public function includeSession (Weather $weather) {
+        $session = $weather->session;
 
         return $this->item($session, new SessionTransformer);
     }
-
 }

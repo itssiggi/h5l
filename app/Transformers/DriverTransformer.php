@@ -14,33 +14,51 @@ use App\Models\ {
  */
 class DriverTransformer extends TransformerAbstract
 {
+    /**
+     * List of resources to automatically include
+     *
+     * @var array
+     */
+    protected $defaultIncludes = [
 
-    public function transform (Driver $driver) {
+    ];
+
+    /**
+     * List of resources possible to include
+     *
+     * @var array
+     */
+    protected $availableIncludes = [
+        'standings',
+        'team',
+        'carNumber'
+    ];
+
+    public function transform(Driver $driver)
+    {
         return [
-            'id' => $driver->id,
-            'name' => $driver->name,
-            'team' => $driver->team->name,
-            'uses_steering_wheel' => $driver->uses_steering_wheel,
-            'points' => $driver->points,
-            'position' => $driver->position,
-            'carNumber' => (CarNumber::where('driver_id', $driver->id)->first())->id,
-            'pointsPerEvent' => $driver->pointsPerEvent
-            # 'fastest_laps' => $this->calculateFastestLaps($driver)
+            'id' => (int) $driver->id,
+            'name' => (string) $driver->name,
+            'uses_steering_wheel' => (boolean) $driver->uses_steering_wheel,
         ];
     }
 
-    public function calculatePoints(Driver $driver)
-    {
-        $results = Result::where('driver_id', $driver->id)->get()->sortBy('race.start_time');
+    public function includeCarNumber(Driver $driver) {
+        $carNumber = $driver->carNumber;
 
-        $points = 0;
+        return $this->item($carNumber, new CarNumberTransformer);
+    }
 
-        foreach ($results as $result)
-        {
-            $points += Transaction::where('result_id', $result->id)->first()->points_added;
-        }
+    public function includeStandings(Driver $driver) {
+        $standing = $driver->standings;
 
-        return $points;
+        return $this->collection($standing, new StandingTransformer);
+    }
+
+    public function includeTeam(Driver $driver) {
+        $team = $driver->team;
+
+        return $this->item($team, new TeamTransformer);
     }
 
     public function calculateFastestLaps(Driver $driver)
